@@ -1,5 +1,6 @@
 package com.ems.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,10 +9,16 @@ import lombok.Data;
 public class PayrollEmployee {
 
     private int id;
+
+    @JsonProperty("employee_name")
     private String empName;
+
+    @JsonProperty("employee_salary")
     private long salary;
+
+    @JsonProperty("employee_age")
     private int age;
-    private String profileImage;
+
 }
 
 

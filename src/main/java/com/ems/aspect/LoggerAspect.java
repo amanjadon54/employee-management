@@ -12,7 +12,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -20,9 +19,6 @@ import java.util.*;
 @Aspect
 @Component
 public class LoggerAspect {
-
-    @Value("${log.api.response:true}")
-    private boolean logApiResponse;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -33,8 +29,7 @@ public class LoggerAspect {
         return handleControllerInvocation(joinPoint);
     }
 
-    //This will log all the methods which are throwing any exception
-//    @AfterThrowing(value = "execution(* *.*.*.*(..))", throwing = "e")
+    @AfterThrowing(value = "execution(* com.ems.*.*.*(..))", throwing = "e")
     public void allMethodException(JoinPoint joinPoint, Exception e) {
         handleAllException(joinPoint, e);
     }

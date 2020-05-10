@@ -1,4 +1,9 @@
 package com.ems.external.service;
 
-public class PayrollService {
+import com.ems.external.RestApiManager;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PayrollService extends RestApiManager {
+
 }
