@@ -20,19 +20,19 @@ public class EmployeeManagementController {
     @Autowired
     EmployeeManagerService employeeManager;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
         Employee employee = employeeManager.createEmployee(createEmployeeRequest);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/v1/employee"}, params = {"name"})
+    @RequestMapping(method = RequestMethod.GET, params = {"name"})
     public ResponseEntity<Employee> getemployeeByName(@Valid @RequestParam(name = "name") String name) {
         List<Employee> employees = employeeManager.fetchEmployeeByName(name);
         return new ResponseEntity(employees, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/v1/employee"}, params = {"age"})
+    @RequestMapping(method = RequestMethod.GET, params = {"age"})
     public ResponseEntity<Employee> getEmployeeByAge(@RequestParam(name = "age") int age) {
         List<Employee> employees = employeeManager.fetchEmployeeByAge(age);
         return new ResponseEntity(employees, HttpStatus.OK);
