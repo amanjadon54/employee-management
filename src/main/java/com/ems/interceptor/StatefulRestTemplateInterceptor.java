@@ -1,4 +1,4 @@
-package com.ems.interceptor.StatefulRestTemplateInterceptor;
+package com.ems.interceptor;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;

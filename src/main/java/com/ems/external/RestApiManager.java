@@ -3,6 +3,7 @@ package com.ems.external;
 import com.ems.config.EmployeeManagementConfig;
 import com.ems.exception.ApiError;
 import com.ems.exception.EmployeeManagementException;
+import com.ems.util.TransformUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -52,12 +53,16 @@ public class RestApiManager {
         return null;
     }
 
-    public <T> T post(String baseUrl, String url, String query, JsonObject body,
+    public <T> T post(String baseUrl, String url, String query, Object body,
                       HttpHeaders requestHeaders, Class<T> responseClassType, int readTimeout) {
         ResponseEntity<T> responseEntity = null;
         try {
             String fullUrl = getFullUrl(baseUrl, url, query);
-            HttpEntity<Object> requestEntity = new HttpEntity<>(body.toString(), requestHeaders);
+            String bodyJson = null;
+            if (body != null) {
+                bodyJson = TransformUtil.toJson(body);
+            }
+            HttpEntity<Object> requestEntity = new HttpEntity<>(bodyJson, requestHeaders);
             log.info("The URL called : {} and readTimeout sent : {}", fullUrl, readTimeout);
 
             responseEntity =

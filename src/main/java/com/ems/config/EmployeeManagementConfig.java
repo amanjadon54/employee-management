@@ -1,6 +1,6 @@
 package com.ems.config;
 
-import com.ems.interceptor.StatefulRestTemplateInterceptor.StatefulRestTemplateInterceptor;
+import com.ems.interceptor.StatefulRestTemplateInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -9,7 +9,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -46,7 +45,7 @@ public class EmployeeManagementConfig {
         template.setMessageConverters(messageConverters);
         LinkedList<ClientHttpRequestInterceptor> list = new LinkedList();
         list.add(new StatefulRestTemplateInterceptor());
-        template.setInterceptors(list);
+//        template.setInterceptors(list);
         return template;
     }
 

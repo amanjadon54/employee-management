@@ -16,14 +16,23 @@ public class PayrollEmployee {
 
     private String id;
 
+    @JsonProperty("name")
     @JsonAlias("employee_name")
-    private String empName;
+    private String name;
 
+    @JsonProperty("salary")
     @JsonAlias("employee_salary")
     private String salary;
 
+    @JsonProperty("age")
     @JsonAlias("employee_age")
     private String age;
+
+    public PayrollEmployee(String name, String salary, String age) {
+        this.name = name;
+        this.salary = salary;
+        this.age = age;
+    }
 
 }
 
