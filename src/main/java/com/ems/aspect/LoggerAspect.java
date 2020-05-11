@@ -1,12 +1,9 @@
 package com.ems.aspect;
 
-import com.ems.exception.CustomRuntimeException;
 import com.ems.util.LogUtils;
 import com.ems.util.LoggingLevel;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.CodeSignature;
@@ -20,8 +17,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Arrays;
 
 
@@ -55,14 +50,14 @@ public class LoggerAspect {
         return joinPoint.proceed();
     }
 
-    @AfterThrowing(value = "execution(* com.ems.*.*.*(..))", throwing = "e")
-    public void allMethodException(JoinPoint joinPoint, Exception e) {
-        handleAllException(joinPoint, e);
-    }
+//    @AfterThrowing(value = "execution(* com.ems.*.*.*(..))", throwing = "e")
+//    public void allMethodException(JoinPoint joinPoint, Exception e) {
+//        handleAllException(joinPoint, e);
+//    }
 
-    private void handleAllException(JoinPoint joinPoint, Exception e) {
-        logParams(joinPoint, LoggingLevel.ERROR);
-    }
+//    private void handleAllException(JoinPoint joinPoint, Exception e) {
+//        logParams(joinPoint, LoggingLevel.ERROR);
+//    }
 
     private Object handleMethodInvocation(ProceedingJoinPoint joinPoint) throws Throwable {
         MDC.put("methodName", joinPoint.getSignature().getName());
@@ -73,35 +68,6 @@ public class LoggerAspect {
             logParams(joinPoint, LoggingLevel.ERROR);
             throw e;
         }
-    }
-
-    private Map<String, String> getExceptionMap(Exception e) {
-        Map<String, String> exceptionMap = new HashMap<>();
-        String stackLog = getSomeStack(e);
-        Throwable t = e.getCause();
-        exceptionMap.put("class", e.getClass().toString());
-        exceptionMap.put("message", e.getMessage());
-        exceptionMap.put("stacktrace", StringEscapeUtils.escapeJava(stackLog));
-        exceptionMap.put("cause", t == null ? null : t.getMessage());
-        if (e instanceof CustomRuntimeException) {
-            String developerMessage = ((CustomRuntimeException) e).getDeveloperMsg();
-            developerMessage = developerMessage == null ? "" : developerMessage;
-            developerMessage = developerMessage.substring(0, Math.min(developerMessage.length(), 512));
-            exceptionMap.put("developerMsg", developerMessage);
-        }
-        return exceptionMap;
-    }
-
-    private String getSomeStack(Exception e) {
-        StackTraceElement[] stack = e.getStackTrace();
-        StringBuilder sbStack = new StringBuilder();
-        for (int i = 0; i < MAX_EXCEPTION_STACK_LINE; i++) {
-            if (stack[i] == null)
-                break;
-            sbStack.append(stack[i]);
-            sbStack.append("    ");
-        }
-        return sbStack.toString();
     }
 
     public void logParams(JoinPoint joinPoint, LoggingLevel level) {

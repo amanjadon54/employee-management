@@ -11,15 +11,8 @@ import java.io.Serializable;
 public class ApiError implements Serializable {
 
     private static final long serialVersionUID = 6916217858899431308L;
-    private Integer status;
     private HttpStatus httpStatus;
     private String message;
     private String developerMessage;
 
-    public ApiError(HttpStatus httpStatus, String message) {
-        super();
-        this.message = message;
-        this.status = httpStatus.value();
-        this.httpStatus = httpStatus;
-    }
 }

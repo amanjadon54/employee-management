@@ -1,7 +1,7 @@
 package com.ems.external;
 
 import com.ems.config.EmployeeManagementConfig;
-import com.ems.exception.CustomRuntimeException;
+import com.ems.exception.EmployeeManagementException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -41,9 +41,9 @@ public class RestApiManager {
         } catch (Exception e) {
             log.error("Error in RestApiManager:get : {} ; Exception : {} ; logId: {}", responseEntity, e, logId);
             if (responseEntity != null) {
-                throw new CustomRuntimeException(e.getMessage(), Integer.parseInt(responseEntity.getStatusCode().toString()), "Get service:concatenation failing" + logId, null);
+                throw new EmployeeManagementException(e.getMessage(), Integer.parseInt(responseEntity.getStatusCode().toString()), "Get service:concatenation failing" + logId, null);
             } else {
-                throw new CustomRuntimeException(e.getMessage(), 500, "Get service:concatenation failing " + logId, null);
+                throw new EmployeeManagementException(e.getMessage(), 500, "Get service:concatenation failing " + logId, null);
             }
         }
         return null;
@@ -69,9 +69,9 @@ public class RestApiManager {
         } catch (Exception e) {
             log.error("Error in RestApiManager:get : {} ; Exception : {} ; logId: {}", responseEntity, e, logId);
             if (responseEntity != null) {
-                throw new CustomRuntimeException(e.getMessage(), Integer.parseInt(responseEntity.getStatusCode().toString()), "post service:concatenation failing " + logId, null);
+                throw new EmployeeManagementException(e.getMessage(), Integer.parseInt(responseEntity.getStatusCode().toString()), "post service:concatenation failing " + logId, null);
             } else {
-                throw new CustomRuntimeException(e.getMessage(), 500, "post service:concatenation failing " + logId, null);
+                throw new EmployeeManagementException(e.getMessage(), 500, "post service:concatenation failing " + logId, null);
             }
         }
         return null;
