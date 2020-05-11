@@ -12,21 +12,47 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Arrays;
+
 
 @Aspect
 @Component
 public class LoggerAspect {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final int MAX_EXCEPTION_STACK_LINE = 6;
 
-    @Around("@annotation(com.ems.annotation.LoggingAnnotation)")
-    public Object logConcatenationController(ProceedingJoinPoint joinPoint) throws Throwable {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Around("@annotation(com.ems.annotation.MdcLog)")
+    public Object logMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+        return handleMethodInvocation(joinPoint);
+    }
+
+    @Around("@within(com.ems.annotation.RequestResponseLog)")
+    public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
         return handleControllerInvocation(joinPoint);
+    }
+
+    private Object handleControllerInvocation(ProceedingJoinPoint joinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String requestId = request.getHeader("X-Request-ID");
+        if (requestId == null) {
+            MDC.put(LogUtils.logId, LogUtils.getLogId());
+        } else {
+            MDC.put(LogUtils.logId, requestId);
+        }
+        logParams(joinPoint, LoggingLevel.INFO);
+        return joinPoint.proceed();
     }
 
     @AfterThrowing(value = "execution(* com.ems.*.*.*(..))", throwing = "e")
@@ -35,74 +61,16 @@ public class LoggerAspect {
     }
 
     private void handleAllException(JoinPoint joinPoint, Exception e) {
-        List<String> paramNames =
-                new ArrayList<>(Arrays.asList(((CodeSignature) joinPoint.getSignature()).getParameterNames()));
-        List<Object> args = new ArrayList<>(Arrays.asList(joinPoint.getArgs()));
-
-        paramNames.add(LogUtils.exceptionMap);
-        args.add(getExceptionMap(e));
-
-        paramNames.add(LogUtils.handler);
-        args.add("allMethodException");
-
-        logParams(paramNames, args, LoggingLevel.ERROR);
+        logParams(joinPoint, LoggingLevel.ERROR);
     }
 
-    private Object handleControllerInvocation(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        long startTime = new Date().getTime();
-        //get params and their values
-        List<String> paramsNamesList =
-                new ArrayList<>(Arrays.asList(((CodeSignature) joinPoint.getSignature()).getParameterNames()));
-        Object[] argsArray = joinPoint.getArgs();
-
-        //fetching from X-Request-ID if not provide a log
-        String logId = null;
-        if (paramsNamesList.contains(LogUtils.logId)) {
-            int logIndex = paramsNamesList.indexOf(LogUtils.logId);
-            logId = (String) argsArray[logIndex];
-            argsArray[logIndex] = logId;
-        } else {
-            logId = LogUtils.getLogId();
-        }
-
-        List<Object> paramsValuesList = new ArrayList<>(Arrays.asList(argsArray));
-
-        //assign method Name
-        paramsNamesList.add(LogUtils.methodName);
-        paramsValuesList.add(joinPoint.getSignature().getName());
-
-        //printing Request logs
-        logParams(paramsNamesList, paramsValuesList, LoggingLevel.INFO);
+    private Object handleMethodInvocation(ProceedingJoinPoint joinPoint) throws Throwable {
+        MDC.put("methodName", joinPoint.getSignature().getName());
+        logParams(joinPoint, LoggingLevel.INFO);
         try {
-
-            //method proceeds
-            Object response = joinPoint.proceed(argsArray);
-            long endTime = new Date().getTime();
-            paramsNamesList.add(LogUtils.response);
-            paramsValuesList.add(response);
-
-            paramsNamesList.add(LogUtils.runtimeMillis);
-            paramsValuesList.add(endTime - startTime);
-
-            logParams(paramsNamesList, paramsValuesList, LoggingLevel.INFO);
-
-            return response;
+            return joinPoint.proceed();
         } catch (Exception e) {
-
-            long endTime = new Date().getTime();
-            Map<String, String> exceptionMap = getExceptionMap(e);
-
-            paramsNamesList.add(LogUtils.runtimeMillis);
-            paramsValuesList.add(endTime - startTime);
-
-            paramsNamesList.add(LogUtils.exceptionMap);
-            paramsValuesList.add(exceptionMap);
-
-            paramsNamesList.add(LogUtils.handler);
-            paramsValuesList.add("handleControllerInvocation");
-
-            logParams(paramsNamesList, paramsValuesList, LoggingLevel.ERROR);
+            logParams(joinPoint, LoggingLevel.ERROR);
             throw e;
         }
     }
@@ -136,7 +104,11 @@ public class LoggerAspect {
         return sbStack.toString();
     }
 
-    public void logParams(List<String> paramNames, List<Object> paramValues, LoggingLevel level) {
+    public void logParams(JoinPoint joinPoint, LoggingLevel level) {
+        Object[] argsArray = joinPoint.getArgs();
+        List<String> paramNames =
+                new ArrayList<>(Arrays.asList(((CodeSignature) joinPoint.getSignature()).getParameterNames()));
+        List<Object> paramValues = new ArrayList<>(Arrays.asList(argsArray));
         switch (level) {
             case INFO:
                 logger.info(LogUtils.getFormattedLog(paramNames, paramValues));

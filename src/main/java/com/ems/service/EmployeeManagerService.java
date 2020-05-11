@@ -1,23 +1,32 @@
 package com.ems.service;
 
-import com.ems.api.EmployeeManager;
+import com.ems.annotation.MdcLog;
 import com.ems.model.Employee;
+import com.ems.model.requests.CreateEmployeeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class EmployeeManagerService implements EmployeeManager {
-    @Override
-    public Employee createEmployee() {
+@Service
+public class EmployeeManagerService {
+
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @MdcLog
+    public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) {
+        logger.info("create emp called with params");
         return null;
     }
 
-    @Override
     public List<Employee> fetchEmployeeByName() {
         return null;
     }
 
-    @Override
+    @MdcLog
     public List<Employee> fetchEmployeeByAge() {
+        logger.info("smple fetch emp by age called");
         return null;
     }
 }
