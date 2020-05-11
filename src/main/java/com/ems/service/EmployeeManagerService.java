@@ -20,12 +20,12 @@ public class EmployeeManagerService {
         return null;
     }
 
-    public List<Employee> fetchEmployeeByName() {
+    public List<Employee> fetchEmployeeByName(String name) {
         return null;
     }
 
     @MdcLog
-    public List<Employee> fetchEmployeeByAge() {
+    public List<Employee> fetchEmployeeByAge(int age) {
         logger.info("smple fetch emp by age called");
         return null;
     }
