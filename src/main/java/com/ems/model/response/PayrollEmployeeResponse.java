@@ -1,6 +1,6 @@
 package com.ems.model.response;
 
-import com.ems.constants.PayrollStatus;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PayrollEmployeeResponse {
 
-    private PayrollStatus status;
+    private String status;
+
+    @JsonAlias("data")
     private PayrollEmployee payrollEmployee;
 }

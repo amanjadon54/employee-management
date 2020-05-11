@@ -1,6 +1,7 @@
 package com.ems.external;
 
 import com.ems.config.EmployeeManagementConfig;
+import com.ems.exception.ApiError;
 import com.ems.exception.EmployeeManagementException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -25,7 +27,7 @@ public class RestApiManager {
     private static final Logger log = LoggerFactory.getLogger(RestApiManager.class);
 
     public <T> T get(String baseUrl, String url, String query, HttpHeaders requestHeaders,
-                     Class<T> responseClassType, int readTimeout, String logId) {
+                     Class<T> responseClassType, int readTimeout) {
         ResponseEntity<T> responseEntity = null;
         try {
             String fullUrl = getFullUrl(baseUrl, url, query);
@@ -33,24 +35,28 @@ public class RestApiManager {
             RestTemplate restTemplate = appConfiguration.restTemplate();
             HttpComponentsClientHttpRequestFactory rf = (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
             rf.setReadTimeout(readTimeout);
-            log.info("The URL called : {} and readTimeout sent : {} with logId : {}", fullUrl, readTimeout, logId);
+            log.info("The URL called : {} and readTimeout sent : {} with logId : {}", fullUrl, readTimeout);
             responseEntity = restTemplate.exchange(fullUrl, HttpMethod.GET, requestEntity, responseClassType);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 return responseEntity.getBody();
             }
         } catch (Exception e) {
-            log.error("Error in RestApiManager:get : {} ; Exception : {} ; logId: {}", responseEntity, e, logId);
-            if (responseEntity != null) {
-                throw new EmployeeManagementException(e.getMessage(), Integer.parseInt(responseEntity.getStatusCode().toString()), "Get service:concatenation failing" + logId, null);
+            log.error("Error in RestApiManager:get : {} ; Exception : {}", responseEntity, e);
+            if (e instanceof HttpClientErrorException) {
+                ApiError apiError = new ApiError(((HttpClientErrorException) e).getStatusCode(), e.getMessage(), ((HttpClientErrorException) e).getResponseBodyAsString());
+                throw new EmployeeManagementException(apiError);
+            } else if (responseEntity != null) {
+                ApiError apiError = new ApiError(responseEntity.getStatusCode(), e.getMessage(), responseEntity.toString());
+                throw new EmployeeManagementException(apiError);
             } else {
-                throw new EmployeeManagementException(e.getMessage(), 500, "Get service:concatenation failing " + logId, null);
+                throw new EmployeeManagementException(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Get service failing ", null));
             }
         }
         return null;
     }
 
     public <T> T post(String baseUrl, String url, String query, JsonObject body,
-                      HttpHeaders requestHeaders, Class<T> responseClassType, int readTimeout, String logId) {
+                      HttpHeaders requestHeaders, Class<T> responseClassType, int readTimeout) {
         ResponseEntity<T> responseEntity = null;
         try {
             String fullUrl = getFullUrl(baseUrl, url, query);
@@ -59,7 +65,7 @@ public class RestApiManager {
             RestTemplate restTemplate = appConfiguration.restTemplate();
             HttpComponentsClientHttpRequestFactory rf = (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
             rf.setReadTimeout(readTimeout);
-            log.info("The URL called : {} and readTimeout sent : {} with logId : {}", fullUrl, readTimeout, logId);
+            log.info("The URL called : {} and readTimeout sent : {}", fullUrl, readTimeout);
 
             responseEntity =
                     restTemplate.exchange(fullUrl, HttpMethod.POST, requestEntity, responseClassType);
@@ -67,11 +73,15 @@ public class RestApiManager {
                 return responseEntity.getBody();
             }
         } catch (Exception e) {
-            log.error("Error in RestApiManager:get : {} ; Exception : {} ; logId: {}", responseEntity, e, logId);
-            if (responseEntity != null) {
-                throw new EmployeeManagementException(e.getMessage(), Integer.parseInt(responseEntity.getStatusCode().toString()), "post service:concatenation failing " + logId, null);
+            log.error("Error in RestApiManager:get : {} ; Exception : {}", responseEntity, e);
+            if (e instanceof HttpClientErrorException) {
+                ApiError apiError = new ApiError(((HttpClientErrorException) e).getStatusCode(), e.getMessage(), ((HttpClientErrorException) e).getResponseBodyAsString());
+                throw new EmployeeManagementException(apiError);
+            } else if (responseEntity != null) {
+                ApiError apiError = new ApiError(responseEntity.getStatusCode(), e.getMessage(), responseEntity.toString());
+                throw new EmployeeManagementException(apiError);
             } else {
-                throw new EmployeeManagementException(e.getMessage(), 500, "post service:concatenation failing " + logId, null);
+                throw new EmployeeManagementException(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Post service failing ", null));
             }
         }
         return null;

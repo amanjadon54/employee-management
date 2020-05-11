@@ -1,10 +1,12 @@
 package com.ems.service;
 
 import com.ems.annotation.MdcLog;
+import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,9 @@ import java.util.List;
 public class EmployeeManagerService {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    PayrollService payrollService;
 
     @MdcLog
     public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) {
@@ -27,6 +32,7 @@ public class EmployeeManagerService {
     @MdcLog
     public List<Employee> fetchEmployeeByAge(int age) {
         logger.info("smple fetch emp by age called");
+        payrollService.fetchEmployeePayroll(age);
         return null;
     }
 }

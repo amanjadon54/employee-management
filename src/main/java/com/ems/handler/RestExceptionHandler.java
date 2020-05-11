@@ -18,8 +18,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(EmployeeManagementException.class)
     public ResponseEntity<ApiError> handleEmployeeManagementException(
             EmployeeManagementException e, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.valueOf(e.getStatus()), e.getMessage(), e.getDeveloperMsg());
-
+        ApiError apiError = e.getApiError();
         return new ResponseEntity(apiError, apiError.getHttpStatus());
     }
 

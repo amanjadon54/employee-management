@@ -1,23 +1,27 @@
 package com.ems.model.response;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PayrollEmployee {
 
-    private int id;
+    private String id;
 
-    @JsonProperty("employee_name")
+    @JsonAlias("employee_name")
     private String empName;
 
-    @JsonProperty("employee_salary")
-    private long salary;
+    @JsonAlias("employee_salary")
+    private String salary;
 
-    @JsonProperty("employee_age")
-    private int age;
+    @JsonAlias("employee_age")
+    private String age;
 
 }
 
