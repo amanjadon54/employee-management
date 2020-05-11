@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 public class RestApiManager {
 
     @Autowired
-    private EmployeeManagementConfig appConfiguration;
+    private RestTemplate restTemplate;
 
     private static final Gson gson = new Gson();
 
@@ -32,9 +32,6 @@ public class RestApiManager {
         try {
             String fullUrl = getFullUrl(baseUrl, url, query);
             HttpEntity<Object> requestEntity = new HttpEntity<Object>(requestHeaders);
-            RestTemplate restTemplate = appConfiguration.restTemplate();
-            HttpComponentsClientHttpRequestFactory rf = (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
-            rf.setReadTimeout(readTimeout);
             log.info("The URL called : {} and readTimeout sent : {} with logId : {}", fullUrl, readTimeout);
             responseEntity = restTemplate.exchange(fullUrl, HttpMethod.GET, requestEntity, responseClassType);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -61,10 +58,6 @@ public class RestApiManager {
         try {
             String fullUrl = getFullUrl(baseUrl, url, query);
             HttpEntity<Object> requestEntity = new HttpEntity<>(body.toString(), requestHeaders);
-
-            RestTemplate restTemplate = appConfiguration.restTemplate();
-            HttpComponentsClientHttpRequestFactory rf = (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
-            rf.setReadTimeout(readTimeout);
             log.info("The URL called : {} and readTimeout sent : {}", fullUrl, readTimeout);
 
             responseEntity =

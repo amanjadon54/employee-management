@@ -4,6 +4,7 @@ import com.ems.annotation.MdcLog;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
+import com.ems.model.response.PayrollEmployeeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,8 @@ public class EmployeeManagerService {
     }
 
     @MdcLog
-    public List<Employee> fetchEmployeeByAge(int age) {
+    public PayrollEmployeeResponse fetchEmployeeByAge(int age) {
         logger.info("smple fetch emp by age called");
-        payrollService.fetchEmployeePayroll(age);
-        return null;
+       return  payrollService.fetchEmployeePayroll(age);
     }
 }

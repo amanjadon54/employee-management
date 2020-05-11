@@ -1,5 +1,6 @@
 package com.ems.config;
 
+import com.ems.interceptor.StatefulRestTemplateInterceptor.StatefulRestTemplateInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -10,11 +11,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Configuration
@@ -29,7 +32,6 @@ public class EmployeeManagementConfig {
     @Value("${httpClient.connection.pool.size:200}")
     private String poolMaxTotal;
 
-    @Scope("prototype")
     @Bean
     public RestTemplate restTemplate() {
         return restTemplate(Integer.parseInt(connectionTimeOut), Integer.parseInt(readTimeOut),
@@ -42,6 +44,9 @@ public class EmployeeManagementConfig {
         List<HttpMessageConverter<?>> messageConverters = template.getMessageConverters();
         messageConverters.add(new FormHttpMessageConverter());
         template.setMessageConverters(messageConverters);
+        LinkedList<ClientHttpRequestInterceptor> list = new LinkedList();
+        list.add(new StatefulRestTemplateInterceptor());
+        template.setInterceptors(list);
         return template;
     }
 
@@ -57,6 +62,21 @@ public class EmployeeManagementConfig {
     private HttpClient httpClient(int noOfConnections) {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(noOfConnections);
-        return HttpClientBuilder.create().setConnectionManager(connectionManager).build();
+
+        return HttpClientBuilder.create().
+                disableCookieManagement().
+                setDefaultRequestConfig(RequestConfig.custom().
+                        setCookieSpec(CookieSpecs.STANDARD).build()).
+                setConnectionManager(connectionManager).build();
     }
+
+//    @Bean
+//    public RestTemplate restTemplate(RestTemplateBuilder templateBuilder) {
+//        return templateBuilder
+//                .requestFactory(new BufferingClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory()))
+//                .interceptors(new StatefulRestTemplateInterceptor())
+//                .build();
+//    }
+
+
 }
