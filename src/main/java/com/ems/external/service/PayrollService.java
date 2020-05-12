@@ -32,7 +32,6 @@ public class PayrollService extends RestApiManager {
 
     @MdcLog
     public PayrollEmployeeResponse createPayroll(PayrollEmployee payrollEmployee) {
-        payrollEmployee.setId("1");
         return super.post(payrollBaseUrl, CREATE_EMPLOYEE, null, payrollEmployee, getRequestHeaders(), PayrollEmployeeResponse.class, 10000);
     }
 
