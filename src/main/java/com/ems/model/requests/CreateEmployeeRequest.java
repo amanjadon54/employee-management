@@ -3,11 +3,11 @@ package com.ems.model.requests;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +15,8 @@ import javax.validation.constraints.Size;
 public class CreateEmployeeRequest {
 
     @NotNull
-    @Size(min = 1, max = 30)
+    @NotBlank
+    @Max(50)
     private String name;
 
     @NotNull
