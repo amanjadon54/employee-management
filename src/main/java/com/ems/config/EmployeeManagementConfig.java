@@ -45,7 +45,7 @@ public class EmployeeManagementConfig {
         template.setMessageConverters(messageConverters);
         LinkedList<ClientHttpRequestInterceptor> list = new LinkedList();
         list.add(new StatefulRestTemplateInterceptor());
-//        template.setInterceptors(list);
+        template.setInterceptors(list);
         return template;
     }
 

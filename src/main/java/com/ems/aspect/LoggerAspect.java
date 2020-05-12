@@ -1,5 +1,6 @@
 package com.ems.aspect;
 
+import com.ems.constants.StringConstants;
 import com.ems.util.LogUtils;
 import com.ems.util.LoggingLevel;
 import org.aspectj.lang.JoinPoint;
@@ -42,9 +43,9 @@ public class LoggerAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String requestId = request.getHeader("X-Request-ID");
         if (requestId == null) {
-            MDC.put(LogUtils.logId, LogUtils.getLogId());
+            MDC.put(StringConstants.LOG_ID, LogUtils.getLogId());
         } else {
-            MDC.put(LogUtils.logId, requestId);
+            MDC.put(StringConstants.LOG_ID, requestId);
         }
         logParams(joinPoint, LoggingLevel.INFO);
         return joinPoint.proceed();

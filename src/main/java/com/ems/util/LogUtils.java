@@ -1,5 +1,6 @@
 package com.ems.util;
 
+import com.ems.constants.StringConstants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,14 +14,12 @@ import java.util.UUID;
 public class LogUtils {
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static Gson gson = new Gson();
-    public static final String logId = "logId";
     public static final String runtimeMillis = "runtime_in_millis";
-    public static final String methodName = "method_name";
     public static final String exceptionMap = "exception_map";
     public static final String handler = "handler";
     public static final String response = "response";
     public static List<String> commonLogCatchExceptionLog =
-            Arrays.asList(methodName, logId, "exception");
+            Arrays.asList(StringConstants.methodName, StringConstants.LOG_ID, "exception");
     public static final List<String> paramsWithJsonValues =
             Arrays.asList("generalRequest", "response", "exception_map", "httpEntity");
 

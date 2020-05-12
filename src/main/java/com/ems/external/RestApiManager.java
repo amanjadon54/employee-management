@@ -1,18 +1,15 @@
 package com.ems.external;
 
-import com.ems.config.EmployeeManagementConfig;
 import com.ems.exception.ApiError;
 import com.ems.exception.EmployeeManagementException;
 import com.ems.util.TransformUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;

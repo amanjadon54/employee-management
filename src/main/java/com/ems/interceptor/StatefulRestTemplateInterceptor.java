@@ -1,7 +1,13 @@
 package com.ems.interceptor;
 
+import com.ems.constants.HttpConstants;
+import com.ems.exception.ApiError;
+import com.ems.exception.EmployeeManagementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -10,24 +16,43 @@ import java.io.IOException;
 import java.util.List;
 
 public class StatefulRestTemplateInterceptor implements ClientHttpRequestInterceptor {
+
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
     private List<String> cookies;
-    private String finalCookies=null;
 
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        if (cookies != null) {
-            String cookie= cookies.get(0);
-            for(int i =1;i<cookies.size();i++){
-                cookie+=";"+cookies.get(i);
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) {
+        try {
+            if (request.getHeaders().containsKey(HttpConstants.IS_COOKIE)) {
+                return executeWithCookie(request, body, execution);
             }
-
-            request.getHeaders().add(HttpHeaders.COOKIE,cookie );
+            return executeWithoutCookie(request, body, execution);
+        } catch (IOException e) {
+            log.error("Error in Rest Interceptor" + e);
+            throw new EmployeeManagementException(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e.getLocalizedMessage()));
         }
-        ClientHttpResponse response = execution.execute(request, body);
+    }
 
+    private ClientHttpResponse executeWithoutCookie(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+        return execution.execute(request, body);
+    }
+
+    private ClientHttpResponse executeWithCookie(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+        ClientHttpResponse response = null;
         if (cookies == null) {
-            cookies=response.getHeaders().get(HttpHeaders.SET_COOKIE);
+            ClientHttpResponse cookieResponse = execution.execute(request, body);
+            cookies = cookieResponse.getHeaders().get(HttpHeaders.SET_COOKIE);
         }
+        request.getHeaders().add(HttpHeaders.COOKIE, concatenateAllCookies(cookies));
+        response = execution.execute(request, body);
         return response;
     }
+
+    private String concatenateAllCookies(List<String> cookies) {
+        String cookie = null;
+        cookies.stream().map(x -> cookie + x);
+        return cookie;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.ems.external.service;
 
 import com.ems.annotation.MdcLog;
+import com.ems.constants.HttpConstants;
 import com.ems.external.RestApiManager;
 import com.ems.model.response.PayrollEmployee;
 import com.ems.model.response.PayrollEmployeeResponse;
@@ -22,22 +23,24 @@ public class PayrollService extends RestApiManager {
     public static final String APPLICATION = "application";
     public static final String JSON = "json";
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @MdcLog
     public PayrollEmployeeResponse fetchEmployeePayroll(int payrollId) {
-        return super.get(payrollBaseUrl, String.format(EMPLOYEE_BY_PARAM, payrollId), null, getRequestHeaders(), PayrollEmployeeResponse.class, 10000);
+        return super.get(payrollBaseUrl, String.format(EMPLOYEE_BY_PARAM, payrollId), null, getRequestHeaders(true), PayrollEmployeeResponse.class, 10000);
     }
 
     @MdcLog
     public PayrollEmployeeResponse createPayroll(PayrollEmployee payrollEmployee) {
-        return super.post(payrollBaseUrl, CREATE_EMPLOYEE, null, payrollEmployee, getRequestHeaders(), PayrollEmployeeResponse.class, 10000);
+        return super.post(payrollBaseUrl, CREATE_EMPLOYEE, null, payrollEmployee, getRequestHeaders(false), PayrollEmployeeResponse.class, 10000);
     }
 
-    private HttpHeaders getRequestHeaders() {
+    private HttpHeaders getRequestHeaders(boolean cookieNeeded) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(new MediaType(APPLICATION, JSON));
+        if (cookieNeeded)
+            requestHeaders.add(HttpConstants.IS_COOKIE, "");
         return requestHeaders;
     }
 }
