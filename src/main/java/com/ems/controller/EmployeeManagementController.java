@@ -1,13 +1,10 @@
 package com.ems.controller;
 
 import com.ems.annotation.RequestResponseLog;
-import com.ems.external.adapter.EmployeePayrollAdapter;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
 import com.ems.model.response.EmployeeSalaryResponse;
-import com.ems.model.response.PayrollAllEmployeeResponse;
-import com.ems.model.response.PayrollEmployeeResponse;
 import com.ems.service.EmployeeManagerService;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,29 +49,10 @@ public class EmployeeManagementController {
         return new ResponseEntity(employees, HttpStatus.OK);
     }
 
-    @GetMapping("/test/{id}")
-    public ResponseEntity<PayrollEmployeeResponse> test(@PathVariable String id) {
-        PayrollEmployeeResponse absc = payrollService.getPayrollById(id);
-        return new ResponseEntity(absc, HttpStatus.OK);
-    }
-
-    @GetMapping("/test/int/{id}")
-    public ResponseEntity<PayrollEmployeeResponse> testInt(@PathVariable String id) {
-        PayrollEmployeeResponse absc = payrollService.getPayrollById(Integer.parseInt(id));
-        return new ResponseEntity(absc, HttpStatus.OK);
-    }
-
-    @GetMapping("/test/employees")
-    public ResponseEntity<PayrollAllEmployeeResponse> test() {
-        PayrollAllEmployeeResponse absc = payrollService.fetchEmployees();
-        return new ResponseEntity(absc, HttpStatus.OK);
-    }
-
-    @PostMapping("/test/create")
-    public ResponseEntity<PayrollEmployeeResponse> test(@RequestBody CreateEmployeeRequest createEmployeeRequest) {
-        EmployeePayrollAdapter adapter = new EmployeePayrollAdapter();
-        PayrollEmployeeResponse absc = payrollService.createPayroll(adapter.adaptEmployee(createEmployeeRequest));
-        return new ResponseEntity(absc, HttpStatus.OK);
+    @RequestMapping("/all")
+    public ResponseEntity<Employee> getAllEmployees() {
+        List<Employee> employees = employeeManager.fetchAllEmployees();
+        return new ResponseEntity(employees, HttpStatus.OK);
     }
 
 

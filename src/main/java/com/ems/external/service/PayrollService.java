@@ -1,32 +1,24 @@
 package com.ems.external.service;
 
 import com.ems.annotation.MdcLog;
-import com.ems.constants.HttpConstants;
 import com.ems.external.RestApiManager;
 import com.ems.model.response.PayrollAllEmployeeResponse;
 import com.ems.model.response.PayrollEmployee;
 import com.ems.model.response.PayrollEmployeeResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+
+import static com.ems.constants.HttpConstants.*;
+import static com.ems.constants.PayrollApiMapper.*;
 
 @Service
 public class PayrollService extends RestApiManager {
 
     @Value("${external.payroll.base.url}")
     private String payrollBaseUrl;
-
-    private final static String EMPLOYEE_BY_PARAM = "/api/v1/employee/%s";
-    private final static String CREATE_EMPLOYEE = "/api/v1/create";
-    private final static String ALL_EMPLOYEES = "/api/v1/employees";
-    public static final String APPLICATION = "application";
-    public static final String JSON = "json";
-    public static final String COOKIE = "PHPSESSID=e10c58ef479e7ba58b22951bbd667b5b; path=/";
-
-    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @MdcLog
     public PayrollEmployeeResponse getPayrollById(String payrollId) {

@@ -23,7 +23,7 @@ public class EmployeeJpaService {
     EmployeeRepository employeeRepository;
 
     @MdcLog
-    public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest, String payrollId) {
+    public synchronized Employee createEmployee(CreateEmployeeRequest createEmployeeRequest, String payrollId) {
         Employee employee = new Employee();
         try {
             employee.setAge(createEmployeeRequest.getAge());
@@ -50,5 +50,10 @@ public class EmployeeJpaService {
     @MdcLog
     public List<String> fetchEmployeeByRegexNmae(String regexName) {
         return employeeRepository.findByName(regexName);
+    }
+
+    @MdcLog
+    public List<Employee> fetchAllEmployees() {
+        return employeeRepository.findAll();
     }
 }

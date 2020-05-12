@@ -57,6 +57,12 @@ public class EmployeeManagerService {
         return prepareEmployeeSalary(employees);
     }
 
+    @MdcLog
+    @Transactional
+    public List<Employee> fetchAllEmployees() {
+        return employeeJpaService.fetchAllEmployees();
+    }
+
     private List<EmployeeSalaryResponse> prepareEmployeeSalary(List<Employee> employees) {
         if (employees != null && employees.size() >= 1) {
             List<EmployeeSalaryResponse> employeeSalaryResponse = new LinkedList<>();
@@ -79,7 +85,6 @@ public class EmployeeManagerService {
     }
 
     private String getAvailableName(String name) {
-//        String nameRegex = name + "\\d?$";
         String nameRegex = name + NAME_REGEX;
         List<String> names = employeeJpaService.fetchEmployeeByRegexNmae(nameRegex);
         if (names != null && names.size() >= 1) {
