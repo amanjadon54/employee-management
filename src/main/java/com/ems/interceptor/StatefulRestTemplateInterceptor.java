@@ -1,6 +1,5 @@
 package com.ems.interceptor;
 
-import com.ems.constants.HttpConstants;
 import com.ems.exception.ApiError;
 import com.ems.exception.EmployeeManagementException;
 import org.slf4j.Logger;
@@ -19,16 +18,12 @@ public class StatefulRestTemplateInterceptor implements ClientHttpRequestInterce
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private List<String> cookies;
+    private String cookie;
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) {
         try {
-            if (request.getHeaders().containsKey(HttpConstants.IS_COOKIE)) {
-                return executeWithCookie(request, body, execution);
-            }
-            request.getHeaders().add(HttpHeaders.COOKIE, concatenateAllCookies(cookies));
-            return execution.execute(request, body);
+            return executeWithCookie(request, body, execution);
         } catch (IOException e) {
             log.error("Error in Rest Interceptor" + e);
             throw new EmployeeManagementException(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e.getLocalizedMessage()));
@@ -37,12 +32,13 @@ public class StatefulRestTemplateInterceptor implements ClientHttpRequestInterce
 
     private ClientHttpResponse executeWithCookie(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         ClientHttpResponse response = null;
-        if (cookies == null) {
-            ClientHttpResponse cookieResponse = execution.execute(request, body);
-            cookies = cookieResponse.getHeaders().get(HttpHeaders.SET_COOKIE);
+        if (cookie == null) {
+            response = execution.execute(request, body);
+            cookie = response.getHeaders().get(HttpHeaders.SET_COOKIE).get(0);
+        } else {
+            request.getHeaders().add(HttpHeaders.COOKIE, cookie);
+            response = execution.execute(request, body);
         }
-        request.getHeaders().add(HttpHeaders.COOKIE, concatenateAllCookies(cookies));
-        response = execution.execute(request, body);
         return response;
     }
 

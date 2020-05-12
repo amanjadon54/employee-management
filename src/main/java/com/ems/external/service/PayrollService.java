@@ -24,6 +24,7 @@ public class PayrollService extends RestApiManager {
     private final static String ALL_EMPLOYEES = "/api/v1/employees";
     public static final String APPLICATION = "application";
     public static final String JSON = "json";
+    public static final String COOKIE = "PHPSESSID=e10c58ef479e7ba58b22951bbd667b5b; path=/";
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -51,8 +52,7 @@ public class PayrollService extends RestApiManager {
     private HttpHeaders getRequestHeaders(boolean cookieNeeded) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(new MediaType(APPLICATION, JSON));
-        if (cookieNeeded)
-            requestHeaders.add(HttpConstants.IS_COOKIE, "");
+        requestHeaders.add(HttpHeaders.COOKIE, COOKIE);
         return requestHeaders;
     }
 }

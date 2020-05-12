@@ -46,4 +46,9 @@ public class EmployeeJpaService {
     public List<Employee> fetchEmployeeByAge(int age) {
         return employeeRepository.findByAge(age);
     }
+
+    @MdcLog
+    public List<String> fetchEmployeeByRegexNmae(String regexName) {
+        return employeeRepository.findByName(regexName);
+    }
 }

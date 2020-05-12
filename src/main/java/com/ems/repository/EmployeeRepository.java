@@ -2,16 +2,18 @@ package com.ems.repository;
 
 import com.ems.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
-    ArrayList<Employee> findByNameContaining(String name);
+    List<Employee> findByNameContaining(String name);
 
-//    @Query(value = "select e.name from employee e where name :likeName order by created_at desc")
-//    String findLastUsedName(String likeName);
-    ArrayList<Employee> findByAge(int age);
+    List<Employee> findByAge(int age);
+
+    @Query(value = "SELECT name FROM employee  WHERE name ~ ?1 order by created_at desc", nativeQuery = true)
+    List<String> findByName(String name);
 }

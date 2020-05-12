@@ -45,7 +45,7 @@ public class EmployeeManagementConfig {
         template.setMessageConverters(messageConverters);
         LinkedList<ClientHttpRequestInterceptor> list = new LinkedList();
         list.add(new StatefulRestTemplateInterceptor());
-        template.setInterceptors(list);
+//        template.setInterceptors(list);
         return template;
     }
 
@@ -68,14 +68,4 @@ public class EmployeeManagementConfig {
                         setCookieSpec(CookieSpecs.STANDARD).build()).
                 setConnectionManager(connectionManager).build();
     }
-
-//    @Bean
-//    public RestTemplate restTemplate(RestTemplateBuilder templateBuilder) {
-//        return templateBuilder
-//                .requestFactory(new BufferingClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory()))
-//                .interceptors(new StatefulRestTemplateInterceptor())
-//                .build();
-//    }
-
-
 }

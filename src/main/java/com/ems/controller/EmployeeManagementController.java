@@ -58,7 +58,7 @@ public class EmployeeManagementController {
         return new ResponseEntity(absc, HttpStatus.OK);
     }
 
-    @GetMapping("/test/{id}")
+    @GetMapping("/test/int/{id}")
     public ResponseEntity<PayrollEmployeeResponse> testInt(@PathVariable String id) {
         PayrollEmployeeResponse absc = payrollService.getPayrollById(Integer.parseInt(id));
         return new ResponseEntity(absc, HttpStatus.OK);
@@ -70,7 +70,7 @@ public class EmployeeManagementController {
         return new ResponseEntity(absc, HttpStatus.OK);
     }
 
-    @GetMapping("/test/create")
+    @PostMapping("/test/create")
     public ResponseEntity<PayrollEmployeeResponse> test(@RequestBody CreateEmployeeRequest createEmployeeRequest) {
         EmployeePayrollAdapter adapter = new EmployeePayrollAdapter();
         PayrollEmployeeResponse absc = payrollService.createPayroll(adapter.adaptEmployee(createEmployeeRequest));
