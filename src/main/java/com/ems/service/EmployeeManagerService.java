@@ -5,12 +5,15 @@ import com.ems.external.adapter.EmployeePayrollAdapter;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
+import com.ems.model.response.EmployeeSalaryResponse;
 import com.ems.model.response.PayrollEmployeeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -28,22 +31,38 @@ public class EmployeeManagerService {
     EmployeeJpaService employeeJpaService;
 
     @MdcLog
+    @Transactional
     public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) {
         PayrollEmployeeResponse createdPayroll = payrollService.createPayroll(adapter.adaptEmployee(createEmployeeRequest));
         return employeeJpaService.createEmployee(createEmployeeRequest, createdPayroll.getPayrollEmployee().getId());
     }
 
     @MdcLog
-    public List<Employee> fetchEmployeeByName(String name) {
-        return employeeJpaService.fetchEmployeeByName(name);
+    @Transactional
+    public List<EmployeeSalaryResponse> fetchEmployeeByName(String name) {
+        List<Employee> employees = employeeJpaService.fetchEmployeeByName(name);
+        return prepareEmployeeSalary(employees);
     }
 
     @MdcLog
-    public List<Employee> fetchEmployeeByAge(int age) {
-        log.info("smple fetch emp by age called");
-        //1. Find all the parollId on basis of partial serchby name
-        //2. for each find the salary.
-//       return  payrollService.fetchEmployeePayroll(age);
-        return employeeJpaService.fetchEmployeeByAge(age);
+    @Transactional
+    public List<EmployeeSalaryResponse> fetchEmployeeByAge(int age) {
+        List<Employee> employees = employeeJpaService.fetchEmployeeByAge(age);
+        return prepareEmployeeSalary(employees);
+    }
+
+    private List<EmployeeSalaryResponse> prepareEmployeeSalary(List<Employee> employees) {
+        if (employees != null && employees.size() >= 1) {
+            List<EmployeeSalaryResponse> employeeSalaryResponse = new LinkedList<>();
+            for (Employee employee : employees) {
+                PayrollEmployeeResponse payrollDetails = payrollService.getPayrollById(employee.getPayrollId());
+                EmployeeSalaryResponse salaryResponse = new EmployeeSalaryResponse(employee.getId(),
+                        employee.getName(), employee.getAge(), Long.parseLong(payrollDetails.getPayrollEmployee().getSalary()));
+                employeeSalaryResponse.add(salaryResponse);
+            }
+            return employeeSalaryResponse;
+        } else {
+            return null;
+        }
     }
 }

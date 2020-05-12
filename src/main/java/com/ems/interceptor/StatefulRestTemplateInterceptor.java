@@ -27,6 +27,7 @@ public class StatefulRestTemplateInterceptor implements ClientHttpRequestInterce
             if (request.getHeaders().containsKey(HttpConstants.IS_COOKIE)) {
                 return executeWithCookie(request, body, execution);
             }
+            request.getHeaders().add(HttpHeaders.COOKIE, concatenateAllCookies(cookies));
             return execution.execute(request, body);
         } catch (IOException e) {
             log.error("Error in Rest Interceptor" + e);
@@ -42,13 +43,12 @@ public class StatefulRestTemplateInterceptor implements ClientHttpRequestInterce
         }
         request.getHeaders().add(HttpHeaders.COOKIE, concatenateAllCookies(cookies));
         response = execution.execute(request, body);
-        cookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
         return response;
     }
 
     private String concatenateAllCookies(List<String> cookies) {
         String cookie = null;
-        cookies.stream().map(x -> cookie + x);
+        cookie = cookies.stream().reduce((x, value) -> x + value).get();
         return cookie;
     }
 
