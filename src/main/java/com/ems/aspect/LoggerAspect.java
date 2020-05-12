@@ -27,7 +27,7 @@ public class LoggerAspect {
 
     private final int MAX_EXCEPTION_STACK_LINE = 6;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Around("@annotation(com.ems.annotation.MdcLog)")
     public Object logMethods(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -78,16 +78,16 @@ public class LoggerAspect {
         List<Object> paramValues = new ArrayList<>(Arrays.asList(argsArray));
         switch (level) {
             case INFO:
-                logger.info(LogUtils.getFormattedLog(paramNames, paramValues));
+                log.info(LogUtils.getFormattedLog(paramNames, paramValues));
                 break;
             case DEBUG:
-                logger.debug(LogUtils.getFormattedLog(paramNames, paramValues));
+                log.debug(LogUtils.getFormattedLog(paramNames, paramValues));
                 break;
             case ERROR:
-                logger.error(LogUtils.getFormattedLog(paramNames, paramValues));
+                log.error(LogUtils.getFormattedLog(paramNames, paramValues));
                 break;
             case WARNING:
-                logger.warn(LogUtils.getFormattedLog(paramNames, paramValues));
+                log.warn(LogUtils.getFormattedLog(paramNames, paramValues));
                 break;
         }
     }

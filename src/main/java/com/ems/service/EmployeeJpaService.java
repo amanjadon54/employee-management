@@ -6,7 +6,6 @@ import com.ems.exception.DuplicateNameException;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
 import com.ems.repository.EmployeeRepository;
-import com.ems.util.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -18,7 +17,7 @@ import java.util.List;
 @Service
 public class EmployeeJpaService {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     EmployeeRepository employeeRepository;
@@ -32,7 +31,7 @@ public class EmployeeJpaService {
             employee.setPayrollId(payrollId);
             employeeRepository.save(employee);
         } catch (Exception e) {
-            logger.error("Error in saving the entity employee" + e);
+            log.error("Error in saving the entity employee" + e);
             throw new DuplicateNameException(e.getMessage(), "createEmployee failed::" + MDC.get(StringConstants.LOG_ID));
         }
         return employee;

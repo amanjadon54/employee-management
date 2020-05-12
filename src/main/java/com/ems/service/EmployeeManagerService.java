@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class EmployeeManagerService {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     PayrollService payrollService;
@@ -40,7 +40,7 @@ public class EmployeeManagerService {
 
     @MdcLog
     public List<Employee> fetchEmployeeByAge(int age) {
-        logger.info("smple fetch emp by age called");
+        log.info("smple fetch emp by age called");
         //1. Find all the parollId on basis of partial serchby name
         //2. for each find the salary.
 //       return  payrollService.fetchEmployeePayroll(age);
