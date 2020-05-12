@@ -30,8 +30,7 @@ public class TestController {
 
     @PostMapping("/test/create")
     public ResponseEntity<PayrollEmployeeResponse> test(@RequestBody CreateEmployeeRequest createEmployeeRequest) {
-        EmployeePayrollAdapter adapter = new EmployeePayrollAdapter();
-        PayrollEmployeeResponse absc = payrollService.createPayroll(adapter.adaptEmployee(createEmployeeRequest));
+        PayrollEmployeeResponse absc = payrollService.createPayroll(EmployeePayrollAdapter.adaptEmployee(createEmployeeRequest));
         return new ResponseEntity(absc, HttpStatus.OK);
     }
 

@@ -29,9 +29,6 @@ public class EmployeeManagerService {
     PayrollService payrollService;
 
     @Autowired
-    EmployeePayrollAdapter adapter;
-
-    @Autowired
     EmployeeJpaService employeeJpaService;
 
     @MdcLog
@@ -39,7 +36,7 @@ public class EmployeeManagerService {
     public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) {
         String name = getAvailableName(createEmployeeRequest.getName());
         createEmployeeRequest.setName(name);
-        PayrollEmployeeResponse createdPayroll = payrollService.createPayroll(adapter.adaptEmployee(createEmployeeRequest));
+        PayrollEmployeeResponse createdPayroll = payrollService.createPayroll(EmployeePayrollAdapter.adaptEmployee(createEmployeeRequest));
         return employeeJpaService.createEmployee(createEmployeeRequest, createdPayroll.getPayrollEmployee().getId());
     }
 
