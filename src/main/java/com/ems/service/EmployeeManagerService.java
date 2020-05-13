@@ -37,7 +37,7 @@ public class EmployeeManagerService {
     @MdcLog
     @Transactional
     public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest) {
-        String name = getAvailableName(createEmployeeRequest.getName());
+        String name = getAvailableName(createEmployeeRequest.getName().toLowerCase());
         createEmployeeRequest.setName(name);
         PayrollEmployeeResponse createdPayroll = payrollService.createPayroll(EmployeePayrollAdapter.adaptEmployee(createEmployeeRequest));
         return employeeJpaService.createEmployee(createEmployeeRequest, createdPayroll.getPayrollEmployee().getId());
@@ -88,7 +88,7 @@ public class EmployeeManagerService {
         String nameRegex = name + NAME_REGEX;
         List<String> names = employeeJpaService.fetchEmployeeByRegexNmae(nameRegex);
         if (names != null && names.size() >= 1) {
-            return name.toLowerCase() + names.size();
+            return name + names.size();
         }
         return name.toLowerCase();
     }
