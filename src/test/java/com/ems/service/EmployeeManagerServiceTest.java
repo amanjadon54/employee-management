@@ -3,20 +3,26 @@ package com.ems.service;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
+import com.ems.model.response.EmployeeSalaryResponse;
+import com.ems.model.response.PayrollAllEmployeeResponse;
 import com.ems.model.response.PayrollEmployee;
 import com.ems.model.response.PayrollEmployeeResponse;
 import com.ems.repository.EmployeeRepository;
+import com.ems.test.util.EmployeeDataProvider;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.LinkedList;
+import java.util.List;
 
+import static com.ems.test.util.EmployeeDataProvider.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EmployeeManagerServiceTest {
@@ -30,8 +36,11 @@ public class EmployeeManagerServiceTest {
     @Mock
     PayrollService payrollService;
 
-    @Mock
-    EmployeeRepository employeeRepository;
+    @Before
+    public void prepareData() {
+
+    }
+
 
     @Test
     public void createEmployeeTest() {
@@ -52,34 +61,31 @@ public class EmployeeManagerServiceTest {
         assertEquals("Unequal Salary", payrollId, expectedEmployee.getPayrollId());
     }
 
-//    @Test
-//    public void testFectchEmployeeByName() {
-//        Employee employee = new Employee(1, "test data", 27, "2", null, null);
-//        LinkedList<Employee> employeeList = new LinkedList<>();
-//        employeeList.add(employee);
-//        when(employeeJpaService.fetchEmployeeByName(employee.getName())).thenReturn(employeeList);
-//        assertEquals("Find by Name does not match", employeeRepository.findByNameContaining(employee.getName()), employeeList);
-//
-//    }
-//
-//    @Test
-//    public void testFectchEmployeeByRegexName() {
-//        Employee employee = new Employee(1, "test data", 27, "2", null, null);
-//        LinkedList<String> employeeNames = new LinkedList<>();
-//        employeeNames.add(employee.getName());
-//        when(employeeRepository.findByName(employee.getName())).thenReturn(employeeNames);
-//
-//        assertEquals("Find by Name Regex does not match", employeeRepository.findByName(employee.getName()), employeeNames);
-//
-//    }
+    @Test
+    public void testFectchEmployeeByName() {
+        String name = "aman";
+        List<Employee> filteredEmployee = fetchEmployeeByName(name);
+        PayrollAllEmployeeResponse payrollRecords = payrollEmployees;
+        when(employeeJpaService.fetchEmployeeByName(name)).thenReturn(filteredEmployee);
+        when(payrollService.fetchEmployees()).thenReturn(payrollRecords);
+        List<EmployeeSalaryResponse> employeesSalary = employeeManagerService.fetchEmployeeByName(name);
+        assertEquals(employeesSalary.size(), filteredEmployee.size());
+        assertTrue(verifyEmployeeSalaryRecords(filteredEmployee, payrollRecords.getPayrollEmployee(), employeesSalary));
 
-//    @Test
-//    public void testFectchEmployeeByAge() {
-//        Employee employee = new Employee(1, "test data", 27, "2", null, null);
-//        LinkedList<Employee> employeeList = new LinkedList<>();
-//        employeeList.add(employee);
-//        when(employeeRepository.findByAge(employee.getAge())).thenReturn(employeeList);
-//        assertEquals("Find by name does not match", employeeRepository.findByAge(employee.getAge()), employeeList);
-//
-//    }
+    }
+
+    @Test
+    public void testFectchEmployeeByAge() {
+        int age = 26;
+        List<Employee> filteredEmployee = fetchEmployeesByAge(age);
+        PayrollAllEmployeeResponse payrollRecords = payrollEmployees;
+        when(employeeJpaService.fetchEmployeeByAge(age)).thenReturn(filteredEmployee);
+        when(payrollService.fetchEmployees()).thenReturn(payrollRecords);
+        List<EmployeeSalaryResponse> employeesSalary = employeeManagerService.fetchEmployeeByAge(age);
+        assertEquals(employeesSalary.size(), filteredEmployee.size());
+        assertTrue(verifyEmployeeSalaryRecords(filteredEmployee, payrollRecords.getPayrollEmployee(), employeesSalary));
+
+    }
+
 }
+
