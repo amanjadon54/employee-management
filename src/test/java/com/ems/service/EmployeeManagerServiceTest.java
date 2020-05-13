@@ -1,5 +1,6 @@
 package com.ems.service;
 
+import com.ems.constants.PayrollStatus;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
@@ -47,7 +48,7 @@ public class EmployeeManagerServiceTest {
         CreateEmployeeRequest employeeRequest = new CreateEmployeeRequest("Aman", 27, 20000);
         String payrollId = "2";
         Employee expectedEmployee = new Employee(1, employeeRequest.getName(), employeeRequest.getAge(), payrollId, null, null);
-        PayrollEmployeeResponse expectedPayroll = new PayrollEmployeeResponse("success",
+        PayrollEmployeeResponse expectedPayroll = new PayrollEmployeeResponse(PayrollStatus.SUCCESS,
                 new PayrollEmployee(payrollId, employeeRequest.getName(),
                         String.valueOf(employeeRequest.getSalary()),
                         String.valueOf(employeeRequest.getAge())));

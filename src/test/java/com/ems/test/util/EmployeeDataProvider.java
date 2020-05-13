@@ -1,5 +1,6 @@
 package com.ems.test.util;
 
+import com.ems.constants.PayrollStatus;
 import com.ems.model.Employee;
 import com.ems.model.response.EmployeeSalaryResponse;
 import com.ems.model.response.PayrollAllEmployeeResponse;
@@ -16,11 +17,11 @@ public class EmployeeDataProvider {
     public static PayrollAllEmployeeResponse payrollEmployees = null;
 
     static {
-        payrollEmployees = prepareAllEmployeesResponseData("success");
+        payrollEmployees = prepareAllEmployeesResponseData();
         employees = fetchEmployeesData();
     }
 
-    public static PayrollAllEmployeeResponse prepareAllEmployeesResponseData(String status) {
+    public static PayrollAllEmployeeResponse prepareAllEmployeesResponseData() {
         PayrollEmployee payrollEmployee = new PayrollEmployee("10", "aman", "20000", "27");
         PayrollEmployee payrollEmployee1 = new PayrollEmployee("11", "rahul", "3000", "27");
         PayrollEmployee payrollEmployee2 = new PayrollEmployee("12", "krishna", "30000", "26");
@@ -44,7 +45,7 @@ public class EmployeeDataProvider {
         payrollEmployeeList.add(payrollEmployee8);
         payrollEmployeeList.add(payrollEmployee9);
 
-        PayrollAllEmployeeResponse response = new PayrollAllEmployeeResponse(status, payrollEmployeeList);
+        PayrollAllEmployeeResponse response = new PayrollAllEmployeeResponse(PayrollStatus.SUCCESS, payrollEmployeeList);
         return response;
     }
 
