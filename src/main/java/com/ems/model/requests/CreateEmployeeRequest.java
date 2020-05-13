@@ -3,11 +3,12 @@ package com.ems.model.requests;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+
+import static com.ems.constants.StringConstants.VALID_NAME_REGEX;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +17,8 @@ public class CreateEmployeeRequest {
 
     @NotNull
     @NotBlank
-    @Max(50)
+    @Length(min = 1, max = 50)
+    @Pattern(regexp = VALID_NAME_REGEX)
     private String name;
 
     @NotNull

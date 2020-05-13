@@ -39,7 +39,7 @@ public class EmployeeJpaService {
 
     @MdcLog
     public List<Employee> fetchEmployeeByName(String name) {
-        return employeeRepository.findByNameContaining(name);
+        return employeeRepository.findByNameContaining(name.toLowerCase());
     }
 
     @MdcLog

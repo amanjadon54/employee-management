@@ -85,8 +85,8 @@ public class EmployeeManagerService {
         String nameRegex = name + NAME_REGEX;
         List<String> names = employeeJpaService.fetchEmployeeByRegexNmae(nameRegex);
         if (names != null && names.size() >= 1) {
-            return name + names.size();
+            return name.toLowerCase() + names.size();
         }
-        return name;
+        return name.toLowerCase();
     }
 }
