@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class EmployeeManagementException extends RuntimeException {
-    ApiError apiError;
+    private ApiError apiError;
 }

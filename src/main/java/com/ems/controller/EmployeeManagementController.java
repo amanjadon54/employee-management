@@ -1,7 +1,6 @@
 package com.ems.controller;
 
 import com.ems.annotation.RequestResponseLog;
-import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
 import com.ems.model.response.EmployeeSalaryResponse;
@@ -20,7 +19,6 @@ import javax.validation.constraints.Pattern;
 import java.io.IOException;
 import java.util.List;
 
-import static com.ems.constants.StringConstants.VALID_NAME_REGEX;
 import static com.ems.constants.StringConstants.VALID_SEARCH_NAME_REGEX;
 
 @RestController
@@ -31,9 +29,6 @@ public class EmployeeManagementController {
 
     @Autowired
     EmployeeManagerService employeeManager;
-
-    @Autowired
-    PayrollService payrollService;
 
     @PostMapping("")
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {

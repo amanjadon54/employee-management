@@ -1,6 +1,7 @@
 package com.ems.service;
 
 import com.ems.annotation.MdcLog;
+import com.ems.exception.EmployeeNotFoundException;
 import com.ems.external.adapter.EmployeePayrollAdapter;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
@@ -11,6 +12,7 @@ import com.ems.model.response.PayrollEmployee;
 import com.ems.model.response.PayrollEmployeeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.ems.constants.StringConstants.LOG_ID;
 import static com.ems.constants.StringConstants.NAME_REGEX;
 
 @Service
@@ -77,7 +80,7 @@ public class EmployeeManagerService {
             }
             return employeeSalaryResponse;
         } else {
-            return null;
+            throw new EmployeeNotFoundException("No Employee found", MDC.get(LOG_ID));
         }
     }
 

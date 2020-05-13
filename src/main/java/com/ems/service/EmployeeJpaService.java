@@ -2,7 +2,7 @@ package com.ems.service;
 
 import com.ems.annotation.MdcLog;
 import com.ems.constants.StringConstants;
-import com.ems.exception.DuplicateNameException;
+import com.ems.exception.EmployeeNotFoundException;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
 import com.ems.repository.EmployeeRepository;
@@ -32,7 +32,7 @@ public class EmployeeJpaService {
             employeeRepository.save(employee);
         } catch (Exception e) {
             log.error("Error in saving the entity employee" + e);
-            throw new DuplicateNameException(e.getMessage(), "createEmployee failed::" + MDC.get(StringConstants.LOG_ID));
+            throw new EmployeeNotFoundException(e.getMessage(), "createEmployee failed::" + MDC.get(StringConstants.LOG_ID));
         }
         return employee;
     }

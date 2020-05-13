@@ -2,25 +2,26 @@ package com.ems.external;
 
 import com.ems.exception.ApiError;
 import com.ems.exception.EmployeeManagementException;
+import com.ems.exception.PayrollServiceException;
 import com.ems.util.TransformUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import static com.ems.constants.StringConstants.LOG_ID;
+
 @Component
 public class RestApiManager {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    private static final Gson gson = new Gson();
 
     private static final Logger log = LoggerFactory.getLogger(RestApiManager.class);
 
@@ -36,16 +37,7 @@ public class RestApiManager {
                 return responseEntity.getBody();
             }
         } catch (Exception e) {
-            log.error("Error in RestApiManager:get : {} ; Exception : {}", responseEntity, e);
-            if (e instanceof HttpClientErrorException) {
-                ApiError apiError = new ApiError(((HttpClientErrorException) e).getStatusCode(), e.getMessage(), ((HttpClientErrorException) e).getResponseBodyAsString());
-                throw new EmployeeManagementException(apiError);
-            } else if (responseEntity != null) {
-                ApiError apiError = new ApiError(responseEntity.getStatusCode(), e.getMessage(), responseEntity.toString());
-                throw new EmployeeManagementException(apiError);
-            } else {
-                throw new EmployeeManagementException(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Get service failing ", null));
-            }
+            handleException(responseEntity, e);
         }
         return null;
     }
@@ -68,16 +60,7 @@ public class RestApiManager {
                 return responseEntity.getBody();
             }
         } catch (Exception e) {
-            log.error("Error in RestApiManager:get : {} ; Exception : {}", responseEntity, e);
-            if (e instanceof HttpClientErrorException) {
-                ApiError apiError = new ApiError(((HttpClientErrorException) e).getStatusCode(), e.getMessage(), ((HttpClientErrorException) e).getResponseBodyAsString());
-                throw new EmployeeManagementException(apiError);
-            } else if (responseEntity != null) {
-                ApiError apiError = new ApiError(responseEntity.getStatusCode(), e.getMessage(), responseEntity.toString());
-                throw new EmployeeManagementException(apiError);
-            } else {
-                throw new EmployeeManagementException(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Post service failing ", null));
-            }
+            handleException(responseEntity, e);
         }
         return null;
     }
@@ -99,15 +82,17 @@ public class RestApiManager {
         return fullUrl.toString();
     }
 
-    private static String toJson(Object obj) {
-        try {
-            if (obj != null) {
-                return gson.toJson(obj);
-            }
-        } catch (JsonParseException e) {
-            log.error("Error in toJson(), obj: " + obj + " ; Exception: " + e.getMessage());
+    private void handleException(ResponseEntity responseEntity, Exception e) {
+        log.error("Error in RestApiManager : {} ; Exception : {}", responseEntity, e);
+        if (e instanceof HttpClientErrorException) {
+            ApiError apiError = new ApiError(((HttpClientErrorException) e).getStatusCode(), e.getMessage(), ((HttpClientErrorException) e).getResponseBodyAsString());
+            throw new EmployeeManagementException(apiError);
+        } else if (responseEntity != null) {
+            ApiError apiError = new ApiError(responseEntity.getStatusCode(), e.getMessage(), responseEntity.toString());
+            throw new EmployeeManagementException(apiError);
+        } else {
+            throw new PayrollServiceException("Payroll service failing ", MDC.get(LOG_ID));
         }
-        return null;
     }
 
 
