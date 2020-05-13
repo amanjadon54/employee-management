@@ -1,16 +1,17 @@
 package com.ems.external;
 
+import com.ems.config.EmployeeManagementConfig;
 import com.ems.exception.ApiError;
 import com.ems.exception.EmployeeManagementException;
 import com.ems.exception.PayrollServiceException;
 import com.ems.util.TransformUtil;
-import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +22,7 @@ import static com.ems.constants.StringConstants.LOG_ID;
 public class RestApiManager {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private EmployeeManagementConfig appConfiguration;
 
     private static final Logger log = LoggerFactory.getLogger(RestApiManager.class);
 
@@ -32,6 +33,9 @@ public class RestApiManager {
             String fullUrl = getFullUrl(baseUrl, url, query);
             HttpEntity<Object> requestEntity = new HttpEntity<Object>(requestHeaders);
             log.info("The URL called : {} and readTimeout sent : {} with logId : {}", fullUrl, readTimeout);
+            RestTemplate restTemplate = appConfiguration.restTemplate();
+            HttpComponentsClientHttpRequestFactory rf = (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
+            rf.setReadTimeout(readTimeout);
             responseEntity = restTemplate.exchange(fullUrl, HttpMethod.GET, requestEntity, responseClassType);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 return responseEntity.getBody();
@@ -53,7 +57,9 @@ public class RestApiManager {
             }
             HttpEntity<Object> requestEntity = new HttpEntity<>(bodyJson, requestHeaders);
             log.info("The URL called : {} and readTimeout sent : {}", fullUrl, readTimeout);
-
+            RestTemplate restTemplate = appConfiguration.restTemplate();
+            HttpComponentsClientHttpRequestFactory rf = (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
+            rf.setReadTimeout(readTimeout);
             responseEntity =
                     restTemplate.exchange(fullUrl, HttpMethod.POST, requestEntity, responseClassType);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {

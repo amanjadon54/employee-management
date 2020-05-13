@@ -9,5 +9,5 @@ public class StringConstants {
     public static final String NAME_AGE_EXCEPTION = "CONSTRAINT FAILED: name can only have alphabets, age should be in between 18 to 100, salary should be more than 1";
     public static final String CREATE_EMPLOYEE_EXCEPTION = NAME_AGE_EXCEPTION + ", salary should be more than 1 and should be numeric";
     public static final String NUMBER_FORMAT_EXCEPTION = "Expecting number instead of a string";
-    public static String ERR_MESSAGE = "ErrorCode : %s :: LogId:: %s";
+    public static final String ERR_MESSAGE = "ErrorCode : %s :: LogId:: %s";
 }

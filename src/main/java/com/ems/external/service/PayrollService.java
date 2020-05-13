@@ -20,24 +20,25 @@ public class PayrollService extends RestApiManager {
     @Value("${external.payroll.base.url}")
     private String payrollBaseUrl;
 
-    @MdcLog
-    public PayrollEmployeeResponse getPayrollById(String payrollId) {
-        return super.get(payrollBaseUrl, String.format(EMPLOYEE_BY_PARAM, payrollId), null, getRequestHeaders(true), PayrollEmployeeResponse.class, 10000);
-    }
+    @Value("${external.payroll.create.read.timeout}")
+    private int createEmployeeReadTimeout;
+
+    @Value("${external.payroll.get.read.timeout}")
+    private int getPayrollReadTimeout;
 
     @MdcLog
-    public PayrollEmployeeResponse getPayrollById(int payrollId) {
-        return super.get(payrollBaseUrl, String.format(EMPLOYEE_BY_PARAM, payrollId), null, getRequestHeaders(true), PayrollEmployeeResponse.class, 10000);
+    public PayrollEmployeeResponse getPayrollById(String payrollId) {
+        return super.get(payrollBaseUrl, String.format(EMPLOYEE_BY_PARAM, payrollId), null, getRequestHeaders(true), PayrollEmployeeResponse.class, getPayrollReadTimeout);
     }
 
     @MdcLog
     public PayrollEmployeeResponse createPayroll(PayrollEmployee payrollEmployee) {
-        return super.post(payrollBaseUrl, CREATE_EMPLOYEE, null, payrollEmployee, getRequestHeaders(false), PayrollEmployeeResponse.class, 10000);
+        return super.post(payrollBaseUrl, CREATE_EMPLOYEE, null, payrollEmployee, getRequestHeaders(false), PayrollEmployeeResponse.class, createEmployeeReadTimeout);
     }
 
     @MdcLog
     public PayrollAllEmployeeResponse fetchEmployees() {
-        return super.get(payrollBaseUrl, ALL_EMPLOYEES, null, getRequestHeaders(false), PayrollAllEmployeeResponse.class, 10000);
+        return super.get(payrollBaseUrl, ALL_EMPLOYEES, null, getRequestHeaders(false), PayrollAllEmployeeResponse.class, getPayrollReadTimeout);
     }
 
 
