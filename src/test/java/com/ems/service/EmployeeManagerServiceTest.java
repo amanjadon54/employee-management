@@ -8,9 +8,6 @@ import com.ems.model.response.EmployeeSalaryResponse;
 import com.ems.model.response.PayrollAllEmployeeResponse;
 import com.ems.model.response.PayrollEmployee;
 import com.ems.model.response.PayrollEmployeeResponse;
-import com.ems.repository.EmployeeRepository;
-import com.ems.test.util.EmployeeDataProvider;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,11 +33,6 @@ public class EmployeeManagerServiceTest {
 
     @Mock
     PayrollService payrollService;
-
-    @Before
-    public void prepareData() {
-
-    }
 
 
     @Test
