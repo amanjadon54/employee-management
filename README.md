@@ -51,7 +51,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
 
 ### Bulk Create
 
-![create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/createBulkEmployeeDesign.png?raw=true)
+[create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/createBulkEmployeeDesign.png?raw=true)
 
     1. Service will recieve the bulk request and will push it to the async queue.
     2. User will be responded back immediately with job Id.
@@ -61,27 +61,26 @@ The dummy API for the payroll management system is present here: http://dummy.r
 
 ### ADDITIONAL FEATURES:
 1. Logging: 
-Each of the request will be assigned a unique logId for better debugging purpose in case of errors.
-
-    Custom Annotational Support:
+Each of the request will be assigned a unique logId for better debugging purpose in case of errorCustom\
+ Annotational Support:\
         1. @RequestResponse : Logs the request and response of a controller.
         2. @MdcLog : if present on top of method, logs the methodName, with logId and request params.
 
-2. Exception Handling
+2. Exception Handling\
     Most of the known exceptions are handled and returns the error in user readable format, with scope for developer
     to trace the error quickly using developer message.
     
-3. System Metrics
-    Access Metrics:
+3. System Metrics\
+    Access Metrics:\
     You can view metrices related to Jvm, threads memory, http traffic, etc. using the endpoint:
     
     <host>:<port>/actuator
     
-    if you want specific metrics:
+    if you want specific metrics:\
     you can provide further the metrics name in the above base url like:
     (<host>:<port>/actuator/<metrics_name>)
     
-    example:
+    example:\
     <host>:<port>/actuator/prometheus
     
    
