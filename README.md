@@ -5,11 +5,11 @@ remote Payroll system and make sure that the two systems are always in sync. 
 The dummy API for the payroll management system is present here: http://dummy.restapiexample.com
 
 ##CONSTRAINTS CONSIDERED
-    1. name should only have alphabets.
-    2. Salary should not be negative, should be numeric and must be greater than or equal to 1.
-    3. Age must be in range 18 to 100 and must be numeric.
+        1. name should only have alphabets.
+        2. Salary should not be negative, should be numeric and must be greater than or equal to 1.
+        3. Age must be in range 18 to 100 and must be numeric.
     
-##Opertions supported:
+##OPERATIONS supported:
         1. Create Employee : if employee name already exists, it will create a record with incremental name based approach.
         2. Fetch Employee By Name : will return all the employees having the name similar to the provided name. 
                             Here, we are using fuzzy search. Hence, search of "bus" will return employee name albus if present.
