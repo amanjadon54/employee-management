@@ -18,7 +18,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
         3. Fetch employee by age :  will return all the employees with the same provided age.
 
 ### API CONTRACT:
-![API Contract](https://documenter.getpostman.com/view/9464343/SzmiWbmS)
+[API Contract](https://documenter.getpostman.com/view/9464343/SzmiWbmS)
 
 ### INSTALLATION STEPS (Make sure docker is installed)
 
@@ -63,8 +63,9 @@ The dummy API for the payroll management system is present here: http://dummy.r
 1. Logging: 
 Each of the request will be assigned a unique logId for better debugging purpose in case of errorCustom\
  Annotational Support:\
-        1. @RequestResponse : Logs the request and response of a controller.
-        2. @MdcLog : if present on top of method, logs the methodName, with logId and request params.
+        @RequestResponse : Logs the request and response of a controller.\
+        \
+        @MdcLog : if present on top of method, logs the methodName, with logId and request params.
 
 2. Exception Handling\
     Most of the known exceptions are handled and returns the error in user readable format, with scope for developer
