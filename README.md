@@ -31,10 +31,11 @@ The dummy API for the payroll management system is present here: http://dummy.re
            docker run -d -p 10001:10001 amanjadon54/employee-application
 
        
-If Docker is not installed, You can run it directly by cloning the repository and performing:
-        1. cd <project_root_directory>
-        2. mvn clean install
-        3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
+If Docker is not installed, You can run it directly by cloning the repository and performing:\
+        
+        1. cd <project_root_directory>\
+        2. mvn clean install\
+        3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar\
 
 
 ### DESIGN:
@@ -83,11 +84,12 @@ the track of task whether in progress, success, or failure\
    NOTE: We will be defining the batch size allowed for processing of bulk request.
 
 ### ADDITIONAL FEATURES:
-1. Logging:
+1. #### Logging:
 Each of the request will be assigned a unique logId for better debugging purpose in case of errorCustom\
- Annotational Support:\
-        @RequestResponse : Logs the request and response of a controller.\
-        \
+Annotational Support:
+
+        @RequestResponse : Logs the request and response of a controller.
+        
         @MdcLog : if present on top of method, logs the methodName, with logId and passed parameters.
 
 2. #### Exception Handling\
@@ -95,20 +97,20 @@ Each of the request will be assigned a unique logId for better debugging purpose
     to trace the error quickly using developer message.\
     A sample execption contains 3 fields:\
 
-        StatusCode : appropriate status of each response.\
-        Message : User understandable message so as to ensure better usability.\
-        DeveloperMessage : will contain logId of the request and Error code, relevant to the developer for easy\
-                           debugging of error.
+        StatusCode  : appropriate status of each response.
+        Message     : User understandable message so as to ensure better usability.
+        DeveloperMsg: will contain logId of the request and Error code, relevant to the developer for easy
+                      debugging of error.
    
-3. System Metrics\
+3. #### System Metrics\
     Access Metrics:\
     You can view metrices related to Jvm, threads memory, http traffic, etc. using the endpoint:
    
         host:port/actuator
    
     if you want specific metrics:\
-    you can provide further the metrics name in the above base url like:
+    you can provide further the metrics name in the above base url like:\
     host:port/actuator/<metrics_name>
    
-    example:\
-    host:port/actuator/prometheus
+        example:
+        host:port/actuator/prometheus
