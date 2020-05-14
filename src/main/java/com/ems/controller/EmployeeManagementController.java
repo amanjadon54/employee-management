@@ -39,7 +39,7 @@ public class EmployeeManagementController {
     @RequestMapping(method = RequestMethod.GET, params = {"name"})
     public ResponseEntity<EmployeeSalaryResponse> getEmployeeByName(@RequestParam(name = "name") @Pattern(regexp = VALID_SEARCH_NAME_REGEX) @NotBlank String name)
             throws IOException {
-        List<EmployeeSalaryResponse> employees = employeeManager.fetchEmployeeByName(name);
+        List<EmployeeSalaryResponse> employees = employeeManager.fetchEmployeeByName(name.toLowerCase());
         return new ResponseEntity(employees, HttpStatus.OK);
     }
 
