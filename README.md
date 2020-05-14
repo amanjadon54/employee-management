@@ -30,3 +30,13 @@ A. CreateEmployee:
 
 B. Bulk Create
     
+    
+    
+Steps to run: (Make sure docker is installed)
+1. mvn clean install
+2. docker build .
+3. docker run -d -p 10001:10001 <container_name>
+
+If Docker is not installed, You can run it directly by cloning the repository and performing:
+1. mvn clean install
+2. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
