@@ -1,6 +1,14 @@
 # employee-management
 
-Logging: Each of the request will be assigned a logId for better debugging purpose in case of errors.
+
+###CONSTRAINTS:
+    1. name should only have alphabets.
+    2. Salary should not be negative, should be numeric and must be greater than or equal to 1.
+    3. Age must be in range 18 to 100 and must be numeric.
+
+
+Logging: 
+Each of the request will be assigned a unique logId for better debugging purpose in case of errors.
 
 Custom Annotational Support:
 1. @RequestResponse : Logs the request and response of a controller.
@@ -21,3 +29,4 @@ A. CreateEmployee:
         In which, we will not have inconsistent data in our db.
 
 B. Bulk Create
+    
