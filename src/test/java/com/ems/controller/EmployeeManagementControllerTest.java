@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static com.ems.StringConstants.*;
+import static com.ems.test.util.EmployeeAttributesConstants.AGE;
+import static com.ems.test.util.EmployeeAttributesConstants.NAME;
 import static com.ems.test.util.EmployeeRequestProvider.prepareEmployeeSalaryList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.when;

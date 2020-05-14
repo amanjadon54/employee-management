@@ -17,6 +17,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static com.ems.StringConstants.TEST_VALIDATION_FAILS;
+import static com.ems.test.util.EmployeeAttributesConstants.*;
 import static com.ems.test.util.EmployeeDataProvider.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -50,9 +52,9 @@ public class EmployeeManagerServiceTest {
         when(employeeJpaService.createEmployee(employeeRequest, payrollId)).thenReturn(expectedEmployee);
         Employee employee = employeeManagerService.createEmployee(employeeRequest);
 
-        assertEquals("Unequal age", employeeRequest.getAge(), expectedEmployee.getAge());
-        assertEquals("Unequal name", employeeRequest.getName().toLowerCase(), expectedEmployee.getName().toLowerCase());
-        assertEquals("Unequal Salary", payrollId, expectedEmployee.getPayrollId());
+        assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, AGE), employeeRequest.getAge(), expectedEmployee.getAge());
+        assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, NAME), employeeRequest.getName().toLowerCase(), expectedEmployee.getName().toLowerCase());
+        assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, SALARY), payrollId, expectedEmployee.getPayrollId());
     }
 
     @Test
@@ -63,9 +65,8 @@ public class EmployeeManagerServiceTest {
         when(employeeJpaService.fetchEmployeeByName(name)).thenReturn(filteredEmployee);
         when(payrollService.fetchEmployees()).thenReturn(payrollRecords);
         List<EmployeeSalaryResponse> employeesSalary = employeeManagerService.fetchEmployeeByName(name);
-        assertEquals(employeesSalary.size(), filteredEmployee.size());
-        assertTrue(verifyEmployeeSalaryRecords(filteredEmployee, payrollRecords.getPayrollEmployee(), employeesSalary));
-
+        assertEquals(String.format(TEST_VALIDATION_FAILS, EMPLOYEE_BY_NAME, SALARY), employeesSalary.size(), filteredEmployee.size());
+        assertTrue((String.format(TEST_VALIDATION_FAILS, EMPLOYEE_BY_NAME, NAME)), verifyEmployeeSalaryRecords(filteredEmployee, payrollRecords.getPayrollEmployee(), employeesSalary));
     }
 
     @Test
