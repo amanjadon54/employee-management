@@ -12,12 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.LinkedList;
 import java.util.List;
 
-import static com.ems.StringConstants.APPLICATION_JSON;
-import static com.ems.StringConstants.EMPLOYEE_BASE_API;
+import static com.ems.StringConstants.*;
+import static com.ems.test.util.EmployeeRequestProvider.prepareEmployeeSalaryList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.*;
@@ -80,67 +78,46 @@ public class EmployeeManagementControllerTest {
 
     @Test
     public void testGetEmployeeByName() throws Exception {
-        EmployeeSalaryResponse employeeSalaryResponse = new EmployeeSalaryResponse(1, "aman", 27, 20000);
-        EmployeeSalaryResponse employeeSalaryResponse2 = new EmployeeSalaryResponse(2, "aman1", 28, 30000);
-        List<EmployeeSalaryResponse> employeeSalaryResponseList = new LinkedList<>();
-        employeeSalaryResponseList.add(employeeSalaryResponse);
-        employeeSalaryResponseList.add(employeeSalaryResponse2);
-
-        String name = "aman";
+        List<EmployeeSalaryResponse> employeeSalaryResponseList = prepareEmployeeSalaryList();
+        String name = employeeSalaryResponseList.get(0).getName();
         when(employeeManagerService.fetchEmployeeByName(name)).thenReturn(employeeSalaryResponseList);
-
-        mockMvc.perform(get(EMPLOYEE_BASE_API).param("name", name))
+        mockMvc.perform(get(EMPLOYEE_BASE_API).param(NAME, name))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].name", is("aman")))
-                .andExpect(jsonPath("$[0].age", is(27)))
-                .andExpect(jsonPath("$[0].salary", is(20000)))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].name", is("aman1")))
-                .andExpect(jsonPath("$[1].age", is(28)))
-                .andExpect(jsonPath("$[1].salary", is(30000)));
+                .andExpect(jsonPath("$[0].id", is(employeeSalaryResponseList.get(0).getId())))
+                .andExpect(jsonPath("$[0].name", is(employeeSalaryResponseList.get(0).getName())))
+                .andExpect(jsonPath("$[0].age", is(employeeSalaryResponseList.get(0).getAge())))
+                .andExpect(jsonPath("$[0].salary", is((int) (employeeSalaryResponseList.get(0).getSalary()))))
+                .andExpect(jsonPath("$[1].id", is(employeeSalaryResponseList.get(1).getId())))
+                .andExpect(jsonPath("$[1].name", is(employeeSalaryResponseList.get(1).getName())))
+                .andExpect(jsonPath("$[1].age", is(employeeSalaryResponseList.get(1).getAge())))
+                .andExpect(jsonPath("$[1].salary", is((int)(employeeSalaryResponseList.get(1).getSalary()))));
 
         verify(employeeManagerService, times(1)).fetchEmployeeByName(name);
         verifyNoMoreInteractions(employeeManagerService);
     }
 
-//    @Test
-//    public void testGetEmployeeByNameNotFound() throws Exception {
-//        String name = "not found";
-//        when(employeeManagerService.fetchEmployeeByName(name)).thenThrow(new EmployeeNotFoundException("", ""));
-//
-//        mockMvc.perform(get("/v1/employee").param("name", name))
-//                .andExpect(status().isInternalServerError());
-//
-//        verify(employeeManagerService, times(1)).fetchEmployeeByName(name);
-//        verifyNoMoreInteractions(employeeManagerService);
-//    }
-
 
     @Test
     public void testGetEmployeeByAge() throws Exception {
-        EmployeeSalaryResponse employeeSalaryResponse = new EmployeeSalaryResponse(1, "aman", 27, 20000);
-        EmployeeSalaryResponse employeeSalaryResponse2 = new EmployeeSalaryResponse(2, "aman1", 27, 30000);
-        List<EmployeeSalaryResponse> employeeSalaryResponseList = new LinkedList<>();
-        employeeSalaryResponseList.add(employeeSalaryResponse);
-        employeeSalaryResponseList.add(employeeSalaryResponse2);
-        int age = 27;
+
+        List<EmployeeSalaryResponse> employeeSalaryResponseList = prepareEmployeeSalaryList();
+        int age = employeeSalaryResponseList.get(0).getAge();
         when(employeeManagerService.fetchEmployeeByAge(age)).thenReturn(employeeSalaryResponseList);
 
-        mockMvc.perform(get(EMPLOYEE_BASE_API).param("age", String.valueOf(age)))
+        mockMvc.perform(get(EMPLOYEE_BASE_API).param(AGE, String.valueOf(age)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].name", is("aman")))
-                .andExpect(jsonPath("$[0].age", is(27)))
-                .andExpect(jsonPath("$[0].salary", is(20000)))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].name", is("aman1")))
-                .andExpect(jsonPath("$[1].age", is(27)))
-                .andExpect(jsonPath("$[1].salary", is(30000)));
+                .andExpect(jsonPath("$[0].id", is(employeeSalaryResponseList.get(0).getId())))
+                .andExpect(jsonPath("$[0].name", is(employeeSalaryResponseList.get(0).getName())))
+                .andExpect(jsonPath("$[0].age", is(employeeSalaryResponseList.get(0).getAge())))
+                .andExpect(jsonPath("$[0].salary", is((int)(employeeSalaryResponseList.get(0).getSalary()))))
+                .andExpect(jsonPath("$[1].id", is(employeeSalaryResponseList.get(1).getId())))
+                .andExpect(jsonPath("$[1].name", is(employeeSalaryResponseList.get(1).getName())))
+                .andExpect(jsonPath("$[1].age", is(employeeSalaryResponseList.get(1).getAge())))
+                .andExpect(jsonPath("$[1].salary", is((int)(employeeSalaryResponseList.get(1).getSalary()))));
 
         verify(employeeManagerService, times(1)).fetchEmployeeByAge(age);
         verifyNoMoreInteractions(employeeManagerService);

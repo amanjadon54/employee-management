@@ -8,6 +8,7 @@ import com.ems.model.response.EmployeeSalaryResponse;
 import com.ems.model.response.PayrollAllEmployeeResponse;
 import com.ems.model.response.PayrollEmployee;
 import com.ems.model.response.PayrollEmployeeResponse;
+import com.ems.test.util.EmployeeRequestProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,7 +38,7 @@ public class EmployeeManagerServiceTest {
 
     @Test
     public void createEmployeeTest() {
-        CreateEmployeeRequest employeeRequest = new CreateEmployeeRequest("Aman", 27, 20000);
+        CreateEmployeeRequest employeeRequest = EmployeeRequestProvider.createValidEmployee();
         String payrollId = "2";
         Employee expectedEmployee = new Employee(1, employeeRequest.getName(), employeeRequest.getAge(), payrollId, null, null);
         PayrollEmployeeResponse expectedPayroll = new PayrollEmployeeResponse(PayrollStatus.SUCCESS,
