@@ -51,7 +51,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
 
 ### Bulk Create
 
-[create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/createBulkEmployeeDesign.png?raw=true)
+![create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/createBulkEmployeeDesign.png?raw=true)
 
     1. Service will recieve the bulk request and will push it to the async queue.
     2. User will be responded back immediately with job Id.
