@@ -4,20 +4,20 @@ remote Payroll system and make sure that the two systems are always in sync. 
 
 The dummy API for the payroll management system is present here: http://dummy.restapiexample.com
 
-##CONSTRAINTS CONSIDERED
+## CONSTRAINTS CONSIDERED
         1. name should only have alphabets.
         2. Salary should not be negative, should be numeric and must be greater than or equal to 1.
         3. Age must be in range 18 to 100 and must be numeric.
     
-##OPERATIONS supported:
+## OPERATIONS supported:
         1. Create Employee : if employee name already exists, it will create a record with incremental name based approach.
         2. Fetch Employee By Name : will return all the employees having the name similar to the provided name. 
                             Here, we are using fuzzy search. Hence, search of "bus" will return employee name albus if present.
                             
         3. Fetch employee by age :  will return all the employees with the same provided age.
 
-##API CONTRACT:
-[Postman Contract :] (https://documenter.getpostman.com/view/9464343/SzmiWbmS)
+## API CONTRACT:
+![API Contract:] (https://documenter.getpostman.com/view/9464343/SzmiWbmS)
 
 ## Steps to run: (Make sure docker is installed)
         1. cd <project_root_directory>
@@ -30,7 +30,8 @@ The dummy API for the payroll management system is present here: http://dummy.r
         2. mvn clean install
         3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
 
-##DESIGN:
+## DESIGN:
+![create Employee Design](https://github.com/amanjadon54/employee-management/blob/master/design/createEmployeeDesign.png?raw=true)
 Case:
 A. CreateEmployee:
     To maintain consistency. We will call the payroll service first, and then on successful result we will save in employee
@@ -66,7 +67,7 @@ Each of the request will be assigned a unique logId for better debugging purpose
     
     if you want specific metrics:
     you can provide further the metrics name in the above base url like:
-    <host>:<port>/actuator/<metrics_name>
+    (<host>:<port>/actuator/<metrics_name>)
     
     example:
     <host>:<port>/actuator/prometheus
