@@ -6,6 +6,9 @@
     2. Salary should not be negative, should be numeric and must be greater than or equal to 1.
     3. Age must be in range 18 to 100 and must be numeric.
 
+API CONTRACT:
+[Postman Contract :] (https://documenter.getpostman.com/view/9464343/SzmiWbmS)
+
 
 Logging: 
 Each of the request will be assigned a unique logId for better debugging purpose in case of errors.
@@ -33,22 +36,26 @@ B. Bulk Create
     
     
 Steps to run: (Make sure docker is installed)
-1. mvn clean install
-2. docker build . -t employee-application
-3. docker run -d -p 10001:10001 employee-application
+1. cd <project_root_directory>
+2. mvn clean install
+3. docker build . -t amanjadon54/employee-application
+4. docker run -d -p 10001:10001 amanjadon54/employee-application
 
 If Docker is not installed, You can run it directly by cloning the repository and performing:
-1. mvn clean install
-2. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
+1. cd <project_root_directory>
+2. mvn clean install
+3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
 
 
 Access Metrics:
 You can view metrices related to Jvm, threads memory, http traffic using the endpoint:
 <host>:<port>/actuator
 
-if you want specifif metrics:
+if you want specific metrics:
 you can provide further the metrics name in the above base url like:
 <host>:<port>/actuator/<metrics_name>
 
 example:
 <host>:<port>/actuator/prometheus
+
+
