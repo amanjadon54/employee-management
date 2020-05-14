@@ -21,17 +21,17 @@ The dummy API for the payroll management system is present here: http://dummy.re
 [API Contract](https://documenter.getpostman.com/view/9464343/SzmiWbmS)
 
 ### INSTALLATION STEPS (Make sure docker is installed)
-        1. Get the docker image from [Docker Image](https://hub.docker.com/r/amanjadon54/employee-application) or pull
-           directly using:
-           
+[Docker Image](https://hub.docker.com/r/amanjadon54/employee-application) 
+1. Get the docker image from above link or pull directly using:
+  
            docker pull amanjadon54/employee-application
            
-        2. Execute the command
+2. Execute the command
                 
            docker run -d -p 10001:10001 amanjadon54/employee-application
 
        
-        If Docker is not installed, You can run it directly by cloning the repository and performing:
+If Docker is not installed, You can run it directly by cloning the repository and performing:
         1. cd <project_root_directory>
         2. mvn clean install
         3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
@@ -80,7 +80,7 @@ the track of task whether in progress, success, or failure\
            failure if it fails.
        
         3. Job will be continued even if one of the request fails.
-        NOTE: We will be defining the batch size allowed for processing of bulk request.
+   NOTE: We will be defining the batch size allowed for processing of bulk request.
 
 ### ADDITIONAL FEATURES:
 1. Logging:
@@ -90,10 +90,11 @@ Each of the request will be assigned a unique logId for better debugging purpose
         \
         @MdcLog : if present on top of method, logs the methodName, with logId and passed parameters.
 
-2. Exception Handling\
+2. #### Exception Handling\
     Most of the known exceptions are handled and returns the error in user readable format, with scope for developer\
     to trace the error quickly using developer message.\
-    A sample execption contains 3 fields:
+    A sample execption contains 3 fields:\
+
         StatusCode : appropriate status of each response.\
         Message : User understandable message so as to ensure better usability.\
         DeveloperMessage : will contain logId of the request and Error code, relevant to the developer for easy\
@@ -103,7 +104,7 @@ Each of the request will be assigned a unique logId for better debugging purpose
     Access Metrics:\
     You can view metrices related to Jvm, threads memory, http traffic, etc. using the endpoint:
    
-    host:port/actuator
+        host:port/actuator
    
     if you want specific metrics:\
     you can provide further the metrics name in the above base url like:
