@@ -9,6 +9,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
         2. Salary should not be negative, should be numeric and must be greater than or equal to 1.
         3. Age must be in range 18 to 100 and must be numeric.
     
+
 ### Operations supported:
         1. Create Employee : if employee name already exists, it will create a record with incremental name based approach.
         2. Fetch Employee By Name : will return all the employees having the name similar to the provided name. 
@@ -20,6 +21,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
 ![API Contract:] (https://documenter.getpostman.com/view/9464343/SzmiWbmS)
 
 ### INSTALLATION STEPS (Make sure docker is installed)
+
         1. cd <project_root_directory>
         2. mvn clean install
         3. docker build . -t amanjadon54/employee-application
@@ -30,9 +32,9 @@ The dummy API for the payroll management system is present here: http://dummy.r
         2. mvn clean install
         3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
 
+
 ### DESIGN:
 ![create Employee Design](https://github.com/amanjadon54/employee-management/blob/master/design/cretateEmployeeDesign.png?raw=true)
-
 CreateEmployee:
     To maintain consistency. We will call the payroll service first, and then on successful result we will save in employee
     management db.
@@ -44,7 +46,6 @@ CreateEmployee:
         
     2. Our service is down while eaiting for response:
         In which, we will not have inconsistent data in our db.
-
 
 ![create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/cretateBulkEmployeeDesign.png?raw=true)
 
@@ -75,3 +76,4 @@ Each of the request will be assigned a unique logId for better debugging purpose
     example:
     <host>:<port>/actuator/prometheus
     
+   
