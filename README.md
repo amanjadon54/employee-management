@@ -23,9 +23,12 @@ The dummy API for the payroll management system is present here: http://dummy.re
 ### INSTALLATION STEPS (Make sure docker is installed)
         1. Get the docker image from [Docker Image](https://hub.docker.com/r/amanjadon54/employee-application) or pull
            directly using:
+           
            docker pull amanjadon54/employee-application
-        2. Execute the command\
-                docker run -d -p 10001:10001 amanjadon54/employee-application
+           
+        2. Execute the command
+                
+           docker run -d -p 10001:10001 amanjadon54/employee-application
 
        
         If Docker is not installed, You can run it directly by cloning the repository and performing:
@@ -50,7 +53,8 @@ The dummy API for the payroll management system is present here: http://dummy.re
     2. Our service is down while waiting for response:
         In which, we will not have inconsistent data in our db.
 
-    3. Problem arises of unrelated data may be present at payroll service for which we can run scheduler jobs to clear such          data.
+    3. Problem arises of unrelated data may be present at payroll service for which we can run scheduler jobs to clear such                     
+       data.
 
 ### Bulk Create
 
@@ -64,18 +68,18 @@ the track of task whether in progress, success, or failure\
 3. Consumer : For processing of CreateEmployeeEvent. \
 
 #### Order:
-         1. Each bulk request will be first stored in the message queue, and the user will be responded\
-           immediately with task id for tracking purpose. At this point a task will be created in the database\
-           containing 2 main fields:\
-           TaskId, status\
-           Initial status of each task will be CREATED.\
+         1. Each bulk request will be first stored in the message queue, and the user will be responded
+           immediately with task id for tracking purpose. At this point a task will be created in the database
+           containing 2 main fields:
+           TaskId, status
+           Initial status of each task will be CREATED.
        
-        2. Once the queue gets a record, our consumer will listen to the event and start processing\
-           the create employee request by calling the createEmployee method (already created)\
-           If the event is completed, the status of the task will be updated to Success, or\
+        2. Once the queue gets a record, our consumer will listen to the event and start processing
+           the create employee request by calling the createEmployee method (already created)
+           If the event is completed, the status of the task will be updated to Success, or
            failure if it fails.
        
-        3. Job will be continued even if one of the request fails.\
+        3. Job will be continued even if one of the request fails.
         NOTE: We will be defining the batch size allowed for processing of bulk request.
 
 ### ADDITIONAL FEATURES:
