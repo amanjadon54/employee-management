@@ -35,7 +35,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
 
 ### DESIGN:
 ![create Employee Design](https://github.com/amanjadon54/employee-management/blob/master/design/cretateEmployeeDesign.png?raw=true)
-CreateEmployee:
+#### CreateEmployee:
     To maintain consistency. We will call the payroll service first, and then on successful result we will save in employee
     management db.
     
@@ -47,9 +47,14 @@ CreateEmployee:
     2. Our service is down while eaiting for response:
         In which, we will not have inconsistent data in our db.
 
-![create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/cretateBulkEmployeeDesign.png?raw=true)
+![create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/createBulkEmployeeDesign.png?raw=true)
 
-Bulk Create
+### Bulk Create
+    1. Service will recieve the bulk request and will push it to the async queue.
+    2. User will be responded back immediately with job Id.
+    3. This JobId will be taken into db for status tracking and an API will be exposed through which user can track the progress of the job.
+    4. Listener will be listening to Queue for new events. On recieveing any it will call the createEmployee in the same manner as create Employee request for each event.
+    5. Job will be continued even if one of the request fails.
 
 ### ADDITIONAL FEATURES:
 1. Logging: 
