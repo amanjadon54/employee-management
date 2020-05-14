@@ -34,9 +34,21 @@ B. Bulk Create
     
 Steps to run: (Make sure docker is installed)
 1. mvn clean install
-2. docker build .
-3. docker run -d -p 10001:10001 <container_name>
+2. docker build . -t employee-application
+3. docker run -d -p 10001:10001 employee-application
 
 If Docker is not installed, You can run it directly by cloning the repository and performing:
 1. mvn clean install
 2. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
+
+
+Access Metrics:
+You can view metrices related to Jvm, threads memory, http traffic using the endpoint:
+<host>:<port>/actuator
+
+if you want specifif metrics:
+you can provide further the metrics name in the above base url like:
+<host>:<port>/actuator/<metrics_name>
+
+example:
+<host>:<port>/actuator/prometheus
