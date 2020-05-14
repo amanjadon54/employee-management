@@ -1,6 +1,8 @@
 package com.ems.service;
 
 import com.ems.constants.PayrollStatus;
+import com.ems.exception.EmployeeManagementException;
+import com.ems.exception.EmployeeNotFoundException;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
 import com.ems.model.requests.CreateEmployeeRequest;
@@ -17,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static com.ems.StringConstants.TEST_FAIL;
 import static com.ems.StringConstants.TEST_VALIDATION_FAILS;
 import static com.ems.test.util.EmployeeAttributesConstants.*;
 import static com.ems.test.util.EmployeeDataProvider.*;
@@ -69,6 +72,15 @@ public class EmployeeManagerServiceTest {
         assertTrue((String.format(TEST_VALIDATION_FAILS, EMPLOYEE_BY_NAME, NAME)), verifyEmployeeSalaryRecords(filteredEmployee, payrollRecords.getPayrollEmployee(), employeesSalary));
     }
 
+    @Test(expected = EmployeeNotFoundException.class)
+    public void testFectchEmployeeByNoRecordName() {
+        String name = "notFound";
+        List<Employee> filteredEmployee = fetchEmployeeByName(name);
+        when(employeeJpaService.fetchEmployeeByName(name)).thenReturn(null);
+        when(payrollService.fetchEmployees()).thenReturn(null);
+        employeeManagerService.fetchEmployeeByName(name);
+    }
+
     @Test
     public void testFectchEmployeeByAge() {
         int age = 26;
@@ -77,9 +89,17 @@ public class EmployeeManagerServiceTest {
         when(employeeJpaService.fetchEmployeeByAge(age)).thenReturn(filteredEmployee);
         when(payrollService.fetchEmployees()).thenReturn(payrollRecords);
         List<EmployeeSalaryResponse> employeesSalary = employeeManagerService.fetchEmployeeByAge(age);
-        assertEquals(employeesSalary.size(), filteredEmployee.size());
+        assertEquals(String.format(TEST_FAIL, EMPLOYEE_BY_AGE), employeesSalary.size(), filteredEmployee.size());
         assertTrue(verifyEmployeeSalaryRecords(filteredEmployee, payrollRecords.getPayrollEmployee(), employeesSalary));
+    }
 
+    @Test(expected = EmployeeNotFoundException.class)
+    public void testFectchEmployeeByNoRecordAge() {
+        int age = 99;
+        List<Employee> filteredEmployee = fetchEmployeesByAge(age);
+        when(employeeJpaService.fetchEmployeeByAge(age)).thenReturn(null);
+        when(payrollService.fetchEmployees()).thenReturn(null);
+        employeeManagerService.fetchEmployeeByAge(age);
     }
 
 }
