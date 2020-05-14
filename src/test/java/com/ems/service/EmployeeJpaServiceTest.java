@@ -11,6 +11,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.LinkedList;
 
+import static com.ems.StringConstants.*;
+import static com.ems.test.util.EmployeeAttributesConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -30,9 +32,9 @@ public class EmployeeJpaServiceTest {
         when(employeeRepository.save(any(Employee.class))).thenReturn(null);
         Employee employee = employeeJpaService.createEmployee(employeeRequest, "1");
 
-        assertEquals("Unequal age", employeeRequest.getAge(), employee.getAge());
-        assertEquals("Unequal name", employeeRequest.getName(), employee.getName());
-        assertEquals("Unequal Salary", "1", employee.getPayrollId());
+        assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, NAME), employeeRequest.getAge(), employee.getAge());
+        assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, AGE), employeeRequest.getName(), employee.getName());
+        assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, SALARY), "1", employee.getPayrollId());
     }
 
     @Test
@@ -41,8 +43,14 @@ public class EmployeeJpaServiceTest {
         LinkedList<Employee> employeeList = new LinkedList<>();
         employeeList.add(employee);
         when(employeeRepository.findByNameContaining(employee.getName())).thenReturn(employeeList);
-        assertEquals("Find by Name does not match", employeeRepository.findByNameContaining(employee.getName()), employeeList);
+        assertEquals(String.format(TEST_FAIL, EMPLOYEE_BY_NAME), employeeJpaService.fetchEmployeeByName(employee.getName()), employeeList);
 
+    }
+
+    @Test
+    public void testFectchEmployeeByNameNotThere() {
+        when(employeeRepository.findByNameContaining(any(String.class))).thenReturn(null);
+        assertEquals(String.format(TEST_VALIDATION_FAILS, EMPLOYEE_BY_NAME, NAME_NOT_PRESENT), employeeJpaService.fetchEmployeeByName(""), null);
     }
 
     @Test
@@ -51,7 +59,14 @@ public class EmployeeJpaServiceTest {
         LinkedList<String> employeeNames = new LinkedList<>();
         employeeNames.add(employee.getName());
         when(employeeRepository.findByName(employee.getName())).thenReturn(employeeNames);
-        assertEquals("Find by Name Regex does not match", employeeRepository.findByName(employee.getName()), employeeNames);
+        assertEquals(String.format(TEST_FAIL, EMPLOYEE_BY_REGEX_NAME), employeeJpaService.fetchEmployeeByRegexNmae(employee.getName()), employeeNames);
+
+    }
+
+    @Test
+    public void testFectchEmployeeByRegexNameNotThere() {
+        when(employeeRepository.findByName("")).thenReturn(null);
+        assertEquals(String.format(TEST_VALIDATION_FAILS, EMPLOYEE_BY_REGEX_NAME, NAME_NOT_PRESENT), employeeJpaService.fetchEmployeeByRegexNmae(""), null);
 
     }
 
@@ -61,7 +76,14 @@ public class EmployeeJpaServiceTest {
         LinkedList<Employee> employeeList = new LinkedList<>();
         employeeList.add(employee);
         when(employeeRepository.findByAge(employee.getAge())).thenReturn(employeeList);
-        assertEquals("Find by name does not match", employeeRepository.findByAge(employee.getAge()), employeeList);
+        assertEquals(String.format(TEST_FAIL, EMPLOYEE_BY_AGE), employeeJpaService.fetchEmployeeByAge(employee.getAge()), employeeList);
+
+    }
+
+    @Test
+    public void testFectchEmployeeByAgeNotThere() {
+        when(employeeRepository.findByAge(any(Integer.class))).thenReturn(null);
+        assertEquals(String.format(TEST_VALIDATION_FAILS, EMPLOYEE_BY_AGE, AGE_NOT_PRESENT), employeeJpaService.fetchEmployeeByAge(97), null);
 
     }
 
