@@ -1,7 +1,6 @@
 package com.ems.service;
 
 import com.ems.constants.PayrollStatus;
-import com.ems.exception.EmployeeManagementException;
 import com.ems.exception.EmployeeNotFoundException;
 import com.ems.external.service.PayrollService;
 import com.ems.model.Employee;
@@ -53,7 +52,7 @@ public class EmployeeManagerServiceTest {
 
         when(payrollService.createPayroll(any(PayrollEmployee.class))).thenReturn(expectedPayroll);
         when(employeeJpaService.createEmployee(employeeRequest, payrollId)).thenReturn(expectedEmployee);
-        Employee employee = employeeManagerService.createEmployee(employeeRequest);
+        employeeManagerService.createEmployee(employeeRequest);
 
         assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, AGE), employeeRequest.getAge(), expectedEmployee.getAge());
         assertEquals(String.format(TEST_VALIDATION_FAILS, CREATE_EMPLOYEE, NAME), employeeRequest.getName().toLowerCase(), expectedEmployee.getName().toLowerCase());
@@ -75,10 +74,20 @@ public class EmployeeManagerServiceTest {
     @Test(expected = EmployeeNotFoundException.class)
     public void testFectchEmployeeByNoRecordName() {
         String name = "notFound";
-        List<Employee> filteredEmployee = fetchEmployeeByName(name);
+        fetchEmployeeByName(name);
         when(employeeJpaService.fetchEmployeeByName(name)).thenReturn(null);
-        when(payrollService.fetchEmployees()).thenReturn(null);
         employeeManagerService.fetchEmployeeByName(name);
+    }
+
+    @Test
+    public void testFectchEmployeeByNameNoSalaryExist() {
+        String name = "notfound";
+        List<Employee> filteredEmployee = fetchEmployeeByName(name);
+        PayrollAllEmployeeResponse payrollRecords = payrollEmployees;
+        when(employeeJpaService.fetchEmployeeByName(name)).thenReturn(filteredEmployee);
+        when(payrollService.fetchEmployees()).thenReturn(payrollRecords);
+        List<EmployeeSalaryResponse> employeesSalary = employeeManagerService.fetchEmployeeByName(name);
+        assertEquals(String.format(TEST_FAIL, EMPLOYEE_BY_AGE), employeesSalary.size(), 0);
     }
 
     @Test
@@ -96,10 +105,20 @@ public class EmployeeManagerServiceTest {
     @Test(expected = EmployeeNotFoundException.class)
     public void testFectchEmployeeByNoRecordAge() {
         int age = 99;
-        List<Employee> filteredEmployee = fetchEmployeesByAge(age);
+        fetchEmployeesByAge(age);
         when(employeeJpaService.fetchEmployeeByAge(age)).thenReturn(null);
-        when(payrollService.fetchEmployees()).thenReturn(null);
         employeeManagerService.fetchEmployeeByAge(age);
+    }
+
+    @Test
+    public void testFectchEmployeeByNoSalaryExist() {
+        int age = 31;
+        List<Employee> filteredEmployee = fetchEmployeesByAge(age);
+        PayrollAllEmployeeResponse payrollRecords = payrollEmployees;
+        when(employeeJpaService.fetchEmployeeByAge(age)).thenReturn(filteredEmployee);
+        when(payrollService.fetchEmployees()).thenReturn(payrollRecords);
+        List<EmployeeSalaryResponse> employeesSalary = employeeManagerService.fetchEmployeeByAge(age);
+        assertEquals(String.format(TEST_FAIL, EMPLOYEE_BY_AGE), employeesSalary.size(), 0);
     }
 
 }
