@@ -18,7 +18,7 @@ The dummy API for the payroll management system is present here: http://dummy.r
         3. Fetch employee by age :  will return all the employees with the same provided age.
 
 ### API CONTRACT:
-![API Contract:] (https://documenter.getpostman.com/view/9464343/SzmiWbmS)
+![API Contract](https://documenter.getpostman.com/view/9464343/SzmiWbmS)
 
 ### INSTALLATION STEPS (Make sure docker is installed)
 
@@ -34,8 +34,10 @@ The dummy API for the payroll management system is present here: http://dummy.r
 
 
 ### DESIGN:
-![create Employee Design](https://github.com/amanjadon54/employee-management/blob/master/design/cretateEmployeeDesign.png?raw=true)
 #### CreateEmployee:
+
+![create Employee Design](https://github.com/amanjadon54/employee-management/blob/master/design/cretateEmployeeDesign.png?raw=true)
+
     To maintain consistency. We will call the payroll service first, and then on successful result we will save in employee
     management db.
     
@@ -47,9 +49,10 @@ The dummy API for the payroll management system is present here: http://dummy.r
     2. Our service is down while eaiting for response:
         In which, we will not have inconsistent data in our db.
 
+### Bulk Create
+
 ![create Bulk_Employee_Design](https://github.com/amanjadon54/employee-management/blob/master/design/createBulkEmployeeDesign.png?raw=true)
 
-### Bulk Create
     1. Service will recieve the bulk request and will push it to the async queue.
     2. User will be responded back immediately with job Id.
     3. This JobId will be taken into db for status tracking and an API will be exposed through which user can track the progress of the job.
