@@ -23,7 +23,7 @@ public class EmployeeJpaService {
     EmployeeRepository employeeRepository;
 
     @MdcLog
-    public synchronized Employee createEmployee(CreateEmployeeRequest createEmployeeRequest, String payrollId) {
+    public Employee createEmployee(CreateEmployeeRequest createEmployeeRequest, String payrollId) {
         Employee employee = new Employee();
         try {
             employee.setAge(createEmployeeRequest.getAge());

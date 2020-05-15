@@ -68,16 +68,16 @@ public class EmployeeManagerService {
             List<EmployeeSalaryResponse> employeeSalaryResponse = new LinkedList<>();
             PayrollAllEmployeeResponse payrollDetails = payrollService.fetchEmployees();
 
-            for (Employee employee : employees) {
-                for (PayrollEmployee payrollEmployee : payrollDetails.getPayrollEmployee()) {
-                    if (employee.getPayrollId().equals(payrollEmployee.getId())) {
-                        EmployeeSalaryResponse salaryResponse = new EmployeeSalaryResponse(employee.getId(),
-                                employee.getName(), employee.getAge(), Long.parseLong(payrollEmployee.getSalary()));
-                        employeeSalaryResponse.add(salaryResponse);
-                    }
+            employees.forEach(employee -> {
+                payrollDetails.getPayrollEmployee().stream().filter(payrollEmployee ->
+                        employee.getPayrollId().equals(payrollEmployee.getId())).forEach(payrollEmployee -> {
+                    EmployeeSalaryResponse salaryResponse = new EmployeeSalaryResponse(employee.getId(),
+                            employee.getName(), employee.getAge(), Long.parseLong(payrollEmployee.getSalary()));
+                    employeeSalaryResponse.add(salaryResponse);
+                });
 
-                }
-            }
+            });
+            
             return employeeSalaryResponse;
         } else {
             throw new EmployeeNotFoundException("No Employee found", MDC.get(LOG_ID));
