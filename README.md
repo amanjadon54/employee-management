@@ -26,10 +26,12 @@ The dummy API for the payroll management system is present here: http://dummy.re
   
            docker pull amanjadon54/employee-application
            
-2. Execute the command
-                
-           docker run -d -p 10001:10001 amanjadon54/employee-application
+2. Execute the command(We are passing db detailsas env in docker container since our db credentials\
+                        are temporary from heroku db provider and rotate after maintenance work is done)\
+          
+           docker run --env DB_DATABASE=d7shrr97o228kp --env DB_HOST=ec2-34-197-141-7.compute-1.amazonaws.com --env DB_PASSWORD=6df2934af499e4ad6e270f78061c8ea4209e1f85d674434e87788324cdac1374 --env DB_USERNAME=ltjilbocudsshw -p 10001:10001 amanjadon54/employee-application:db
 
+       NOTE: In case you are facing qrong username or password you need to pass latest db credentials here.
        
 If Docker is not installed, You can run it directly by cloning the repository and performing:\
         
