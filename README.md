@@ -24,20 +24,21 @@ The dummy API for the payroll management system is present here: http://dummy.re
 [Docker Image](https://hub.docker.com/r/amanjadon54/employee-application) 
 1. Get the docker image from above link or pull directly using:
   
-           docker pull amanjadon54/employee-application
+           docker pull amanjadon54/employee-application:db
            
-2. Execute the command(We are passing db detailsas env in docker container since our db credentials\
-                        are temporary from heroku db provider and rotate after maintenance work is done)\
+2. Execute the command
+   NOTE: We are passing db detailsas env in docker container since our db credentials are temporary from\
+         heroku db provider and rotate after maintenance work is done\
           
            docker run --env DB_DATABASE=d7shrr97o228kp --env DB_HOST=ec2-34-197-141-7.compute-1.amazonaws.com --env DB_PASSWORD=6df2934af499e4ad6e270f78061c8ea4209e1f85d674434e87788324cdac1374 --env DB_USERNAME=ltjilbocudsshw -p 10001:10001 amanjadon54/employee-application:db
 
-       NOTE: In case you are facing qrong username or password you need to pass latest db credentials here.
+       NOTE: In case you are facing wrong username or password you need to pass latest db credentials here.
        
 If Docker is not installed, You can run it directly by cloning the repository and performing:\
         
-        1. cd <project_root_directory>\
-        2. mvn clean install\
-        3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar\
+        1. cd <project_root_directory>
+        2. mvn clean install
+        3. java -jar target/employee-management-system-1.0-SNAPSHOT.jar
 
 
 ### DESIGN:
@@ -67,8 +68,8 @@ If Docker is not installed, You can run it directly by cloning the repository an
 1. Message Broker System : for asynchronous processing of employees. Also, to ensure even if\
 one of the job fails, rest continues.
 2. TaskManagementService : Purpose of service is to store the status of tasks/jobs. It provides an end point to keep\
-the track of task whether in progress, success, or failure\
-3. Consumer : For processing of CreateEmployeeEvent. \
+the track of task whether in progress, success, or failure
+3. Consumer : For processing of CreateEmployeeEvent.
 
 #### Order:
          1. Each bulk request will be first stored in the message queue, and the user will be responded
@@ -94,17 +95,17 @@ Annotational Support:
         
         @MdcLog : if present on top of method, logs the methodName, with logId and passed parameters.
 
-2. #### Exception Handling\
+2. #### Exception Handling
     Most of the known exceptions are handled and returns the error in user readable format, with scope for developer\
     to trace the error quickly using developer message.\
-    A sample execption contains 3 fields:\
+    A sample execption contains 3 fields:
 
         StatusCode  : appropriate status of each response.
         Message     : User understandable message so as to ensure better usability.
         DeveloperMsg: will contain logId of the request and Error code, relevant to the developer for easy
                       debugging of error.
    
-3. #### System Metrics\
+3. #### System Metrics
     Access Metrics:\
     You can view metrices related to Jvm, threads memory, http traffic, etc. using the endpoint:
    
